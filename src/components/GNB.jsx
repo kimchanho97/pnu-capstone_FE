@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 export default function GNB() {
   return (
     <div className=" border-b p-5 flex justify-between">
-      <Link className=" font-mono font-semibold" to={"/"}>
-        pnuCloud
+      <Link className=" tracking-wider" to={"/"}>
+        pitapat
       </Link>
       <div className=" text-sm flex gap-2 items-center font-medium">
         <Link to={"/login"}>로그인</Link>
