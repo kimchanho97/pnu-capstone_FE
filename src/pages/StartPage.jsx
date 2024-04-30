@@ -3,7 +3,7 @@ import { templateIcons } from "../utils/constant";
 
 export default function StartPage() {
   return (
-    <div className=" pt-20 px-5 bg-zinc-50">
+    <div className=" pt-20 px-5 ">
       <div className=" flex flex-col gap-3">
         <h1 className=" font-semibold text-[40px]">템플릿으로 시작하기</h1>
         <h2>예제 템플릿으로 지금 바로 시작해보세요.</h2>
@@ -26,7 +26,7 @@ export default function StartPage() {
           ))}
         </div>
       </div>
-      <div className=" h-[300px]" />
+      <div className=" h-[100px]" />
     </div>
   );
 }
