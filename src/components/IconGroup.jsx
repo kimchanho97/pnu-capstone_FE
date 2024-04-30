@@ -1,14 +1,12 @@
 import React from "react";
 import { FaJava, FaNodeJs, FaPython, FaReact, FaVuejs } from "react-icons/fa";
 import {
-  SiSpringboot,
-  SiSpring,
   SiFlask,
   SiNextdotjs,
+  SiSpring,
+  SiSpringboot,
   SiSvelte,
-  SiMysql,
 } from "react-icons/si";
-import { SiMariadbfoundation } from "react-icons/si";
 
 export default function IconGroup() {
   return (
@@ -23,8 +21,6 @@ export default function IconGroup() {
       <SiSpring />
       <SiSpringboot />
       <SiFlask />
-      <SiMariadbfoundation />
-      <SiMysql />
     </div>
   );
 }
