@@ -1,3 +1,4 @@
+import CircularProgress from "@mui/material/CircularProgress";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -23,4 +24,10 @@ export default function GithubCallbackPage() {
   useEffect(() => {
     handleLogin();
   }, []);
+
+  return (
+    <div className=" flex justify-center pt-10">
+      <CircularProgress />
+    </div>
+  );
 }
