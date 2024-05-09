@@ -8,8 +8,11 @@ export default function StartPage() {
         <h1 className=" font-semibold text-[40px]">템플릿으로 시작하기</h1>
         <h2>예제 템플릿으로 지금 바로 시작해보세요.</h2>
         <div className=" grid grid-cols-3 gap-5 mt-14">
-          {templateIcons.map(({ Icon, title, subtitle }) => (
-            <div className=" flex flex-col justify-between border rounded-xl shadow-md p-5 h-[200px]">
+          {templateIcons.map(({ Icon, title, subtitle }, index) => (
+            <div
+              className=" flex flex-col justify-between border rounded-xl shadow-md p-5 h-[200px]"
+              key={index}
+            >
               <div className=" flex gap-2">
                 <Icon className=" w-10 h-10" />
                 <div className=" flex flex-col text-sm">
