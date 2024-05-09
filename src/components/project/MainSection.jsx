@@ -1,23 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
 import { FaPlus, FaSquare } from "react-icons/fa";
 import { FaCaretRight } from "react-icons/fa6";
 import { IoTerminal } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { ReactComponent as GithubIcon } from "../../assets/github.svg";
+import useModal from "../../hooks/useModal";
 import { icons } from "../../utils/constant";
 import MainMenu from "./MainMenu";
-import SelectRepoModal from "./SelectRepoModal";
 
 export default function MainSection() {
-  const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] =
-    useState(false);
+  const { openModal } = useModal();
+  const handleCreateProject = () => {
+    openModal({ type: "selectRepoModal" });
+  };
 
   return (
     <div className=" h-full">
-      {isCreateProjectModalOpen && (
-        <SelectRepoModal onClose={() => setIsCreateProjectModalOpen(false)} />
-      )}
-
       <MainMenu />
       <div
         className=" bg-[#f9f9f9] w-full"
@@ -99,7 +97,7 @@ export default function MainSection() {
             {/* 프로젝트 컴포넌트 */}
             <button
               className=" w-[320px] h-[200px] hover:border border-dotted rounded-xl border-blue-300 group"
-              onClick={() => setIsCreateProjectModalOpen(true)}
+              onClick={handleCreateProject}
             >
               <div className=" w-full h-full flex justify-center items-center">
                 <div className=" bg-sky-300 w-10 h-10 rounded-full relative group-hover:bg-sky-500">
