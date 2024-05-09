@@ -1,15 +1,16 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { CiSquarePlus } from "react-icons/ci";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
+import useModal from "../../hooks/useModal";
 import useOnClickOutside from "../../hooks/useOnClickOutside";
 import TemplateOptions from "./TemplateOptions";
 
-export default function SelectRepoModal({ onClose }) {
+export default function SelectRepoModal() {
   const modalRef = useRef(null);
   const modalWrapperRef = useRef(null);
-  const [isNext, setIsNext] = useState(false);
+  const { closeModal } = useModal();
 
-  useOnClickOutside(modalRef, modalWrapperRef, onClose);
+  useOnClickOutside(modalRef, modalWrapperRef, closeModal);
 
   return (
     <div
