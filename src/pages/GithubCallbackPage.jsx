@@ -15,7 +15,7 @@ export default function GithubCallbackPage() {
     try {
       const response = await githubLogin(code);
       setUser(response);
-      navigate(`/${response.login}`);
+      navigate(`/project/${response.login}`);
     } catch (error) {
       console.error(error);
     }
