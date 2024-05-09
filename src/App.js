@@ -1,10 +1,11 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import MainPage from "./pages/MainPage";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
-import StartPage from "./pages/StartPage";
+import ProjectPage from "./pages/ProjectPage";
+import GithubCallbackPage from "./pages/GithubCallbackPage";
 import LoginPage from "./pages/LoginPage";
-import AppPage from "./pages/AppPage";
+import MainPage from "./pages/MainPage";
+import StartPage from "./pages/StartPage";
 
 function App() {
   return (
@@ -15,7 +16,8 @@ function App() {
           <Route path="/create" element={<StartPage />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/app" element={<AppPage />} />
+        <Route path="/project/:login" element={<ProjectPage />} />
+        <Route path="/callback" element={<GithubCallbackPage />} />
       </Routes>
     </BrowserRouter>
   );

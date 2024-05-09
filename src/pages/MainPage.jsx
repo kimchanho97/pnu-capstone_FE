@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import IconGroup from "../components/IconGroup";
+import IconGroup from "../components/main/IconGroup";
 
 export default function MainPage() {
   return (
