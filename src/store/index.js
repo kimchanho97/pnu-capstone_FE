@@ -6,3 +6,9 @@ export const userAtom = atom({
   avatar_url: "",
   nickname: "",
 });
+
+export const modalAtom = atom({
+  isOpen: false,
+  props: {},
+  conponent: null,
+});
