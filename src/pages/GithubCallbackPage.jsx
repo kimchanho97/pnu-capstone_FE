@@ -1,5 +1,5 @@
 import CircularProgress from "@mui/material/CircularProgress";
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { githubLogin } from "../apis/user";
@@ -7,7 +7,7 @@ import { userAtom } from "../store";
 
 export default function GithubCallbackPage() {
   const [searchParams] = useSearchParams();
-  const [user, setUser] = useAtom(userAtom);
+  const setUser = useSetAtom(userAtom);
   const navigate = useNavigate();
 
   const handleLogin = async () => {

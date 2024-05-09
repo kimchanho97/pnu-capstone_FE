@@ -1,10 +1,10 @@
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import React from "react";
 import { HiMiniSquare3Stack3D } from "react-icons/hi2";
 import { userAtom } from "../../store";
 
 export default function SideSection() {
-  const [user, setUser] = useAtom(userAtom);
+  const user = useAtomValue(userAtom);
 
   return (
     <div className=" w-[300px] h-screen bg-[#26282e] p-5 text-white">
