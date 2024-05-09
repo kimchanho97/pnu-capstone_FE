@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function GNB() {
   return (
-    <div className=" border-b p-5 flex justify-between">
+    <div className=" border-b p-5 flex justify-between h-[70px] px-16">
       <Link className=" tracking-wider" to={"/"}>
         pitapat
       </Link>

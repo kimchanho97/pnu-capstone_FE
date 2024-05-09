@@ -12,7 +12,7 @@ export default function MainPage() {
             linear-gradient(336deg, rgba(0,255,0,.06), rgba(0,255,0,0) 70.71%),
             linear-gradient(217deg, rgba(0,0,255,.06), rgba(0,0,255,0) 70.71%)
         `,
-        height: "calc(100vh - 100px)",
+        height: "calc(100vh - 70px)",
       }}
     >
       <div className=" flex flex-col items-center">
