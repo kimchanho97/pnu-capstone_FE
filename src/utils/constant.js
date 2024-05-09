@@ -37,3 +37,24 @@ export const templateIcons = [
   { Icon: MongodbIcon, subtitle: "database", title: "MongoDB" },
   { Icon: PostgresqlIcon, subtitle: "database", title: "PostgreSQL" },
 ];
+
+export const icons = {
+  react: ReactIcon,
+  vue: VueIcon,
+  angular: AngularIcon,
+  html: HtmlIcon,
+  svelte: SvelteIcon,
+  nextjs: NextjsIcon,
+  nestjs: NestjsIcon,
+  nodejs: NodejsIcon,
+  kotlin: KotlinIcon,
+  django: DjangoIcon,
+  flask: FlaskIcon,
+  fastapi: FastapiIcon,
+  spring: SpringIcon,
+  nginx: NginxIcon,
+  docker: DockerIcon,
+  mysql: MysqlIcon,
+  mongodb: MongodbIcon,
+  postgresql: PostgresqlIcon,
+};
