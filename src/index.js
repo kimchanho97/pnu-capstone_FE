@@ -1,15 +1,27 @@
+import { Provider } from "jotai";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
+import { QueryClient, QueryClientProvider } from "react-query";
 import App from "./App";
+import "./index.css";
 import reportWebVitals from "./reportWebVitals";
-import { Provider } from "jotai";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      keepPreviousData: true,
+      retry: false,
+    },
+  },
+});
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <React.StrictMode>
   <Provider>
-    <App />
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
   </Provider>,
   // </React.StrictMode>
 );
