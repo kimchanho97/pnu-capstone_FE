@@ -1,6 +1,7 @@
 import React from "react";
 import { FaPlus, FaSquare } from "react-icons/fa";
 import { FaCaretRight } from "react-icons/fa6";
+import { GoGitBranch } from "react-icons/go";
 import { IoTerminal } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { ReactComponent as GithubIcon } from "../../assets/github.svg";
@@ -22,7 +23,16 @@ export default function MainSection() {
         style={{ height: `calc(100vh - 50px)`, width: `calc(100vw - 300px)` }}
       >
         <div className=" p-10">
-          <div className=" text-2xl border-b-2 pb-1">Project</div>
+          <div className=" text-2xl border-b-2 pb-1 flex justify-between">
+            <span>Project</span>
+            <div className=" flex items-center gap-2">
+              <span className=" text-sm">배포환경</span>
+              <div className=" flex text-sm items-center gap-1 bg-zinc-200 p-1 px-2 rounded-md">
+                <span>main</span>
+                <GoGitBranch />
+              </div>
+            </div>
+          </div>
           <div className="grid grid-cols-1 gap-7 mt-10 sm:grid-cols-2 md:grid-cols-3">
             {/* 프로젝트 컴포넌트 */}
             <div className=" flex flex-col justify-between border rounded-xl shadow p-5 h-[200px] w-[320px]">
