@@ -1,9 +1,8 @@
-import { useAtomValue } from "jotai";
 import React from "react";
-import { modalAtom } from "../../store";
+import useModal from "../../hooks/useModal";
 
 export default function GlobalModal() {
-  const modal = useAtomValue(modalAtom);
+  const { modal } = useModal();
 
   if (!modal.isOpen) return null;
   return <>{modal?.component}</>;

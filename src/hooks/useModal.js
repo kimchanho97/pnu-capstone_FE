@@ -6,26 +6,28 @@ import MyRepoModal from "../components/project/MyRepoModal";
 export default function useModal() {
   const [modal, setModal] = useAtom(modalAtom);
 
-  const modalType = {
-    selectRepoModal: {
-      component: <SelectRepoModal />,
-    },
-    MyRepoModal: {
-      component: <MyRepoModal />,
-    },
+  const components = {
+    selectRepoModal: <SelectRepoModal />,
+    MyRepoModal: <MyRepoModal />,
   };
 
   const closeModal = () => {
     setModal((prev) => ({ ...prev, isOpen: false }));
   };
 
-  const openModal = ({ type, props }) => {
+  const openModal = ({ modalType, props }) => {
     setModal({
       isOpen: true,
-      component: modalType[type].component,
+      modalType,
       props,
     });
   };
 
-  return { modal, openModal, closeModal };
+  const currentComponent = components[modal?.modalType];
+
+  return {
+    modal: { ...modal, component: currentComponent },
+    openModal,
+    closeModal,
+  };
 }

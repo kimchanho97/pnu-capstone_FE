@@ -18,7 +18,7 @@ export const modalAtom = atomWithStorage(
   {
     isOpen: false,
     props: {},
-    conponent: null,
+    modalType: "",
   },
   storage,
 );
