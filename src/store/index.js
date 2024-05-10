@@ -1,14 +1,24 @@
-import { atom } from "jotai";
+import { atomWithStorage, createJSONStorage } from "jotai/utils";
 
-export const userAtom = atom({
-  id: "",
-  login: "",
-  avatar_url: "",
-  nickname: "",
-});
+const storage = createJSONStorage(() => sessionStorage);
 
-export const modalAtom = atom({
-  isOpen: false,
-  props: {},
-  conponent: null,
-});
+export const userAtom = atomWithStorage(
+  "user",
+  {
+    id: "",
+    login: "",
+    avatar_url: "",
+    nickname: "",
+  },
+  storage,
+);
+
+export const modalAtom = atomWithStorage(
+  "modal",
+  {
+    isOpen: false,
+    props: {},
+    conponent: null,
+  },
+  storage,
+);
