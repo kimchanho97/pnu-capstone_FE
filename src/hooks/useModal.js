@@ -1,6 +1,7 @@
 import { useAtom } from "jotai";
 import SelectRepoModal from "../components/project/SelectRepoModal";
 import { modalAtom } from "../store";
+import MyRepoModal from "../components/project/MyRepoModal";
 
 export default function useModal() {
   const [modal, setModal] = useAtom(modalAtom);
@@ -8,6 +9,9 @@ export default function useModal() {
   const modalType = {
     selectRepoModal: {
       component: <SelectRepoModal />,
+    },
+    MyRepoModal: {
+      component: <MyRepoModal />,
     },
   };
 
