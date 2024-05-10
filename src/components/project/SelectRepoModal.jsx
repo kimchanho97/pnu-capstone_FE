@@ -11,7 +11,7 @@ export default function SelectRepoModal() {
   const modalWrapperRef = useRef(null);
   const { closeModal, openModal } = useModal();
   const handleMyRepoDeploy = () => {
-    openModal({ type: "MyRepoModal" });
+    openModal({ modalType: "MyRepoModal" });
   };
   useOnClickOutside(modalRef, modalWrapperRef, closeModal);
 
