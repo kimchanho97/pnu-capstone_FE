@@ -12,8 +12,9 @@ export default function ProjectPage() {
 
   useEffect(() => {
     const path = location.pathname.split("/")[2];
-    if (path !== user.login) {
-      navigate("/login");
+    const user = sessionStorage.getItem("user");
+    if (!user || path !== JSON.parse(user).login) {
+      navigate("/");
     }
   }, [location.pathname, navigate, user.login]);
 
