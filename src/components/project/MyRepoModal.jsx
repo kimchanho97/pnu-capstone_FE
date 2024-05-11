@@ -7,12 +7,15 @@ import { fetchRepos } from "../../apis/user";
 import { ReactComponent as GithubIcon } from "../../assets/github.svg";
 import useModal from "../../hooks/useModal";
 import { userAtom } from "../../store";
+import FrameworkList from "./FrameworkList";
 import RepoList from "./RepoList";
 
 export default function MyRepoModal() {
   const { closeModal } = useModal();
   const [isRepoListOpen, setIsRepoListOpen] = useState(false);
   const [selectedRepo, setSelectedRepo] = useState("");
+  const [isFrameworkListOpen, setIsFrameworkListOpen] = useState(false);
+  const [selectedFramework, setSelectedFramework] = useState("");
   const user = useAtomValue(userAtom);
   const { isLoading, data: repos } = useQuery(
     ["/repos", user.login], // 쿼리 키에 user.login을 추가하여 유저마다 캐시 관리
@@ -54,15 +57,40 @@ export default function MyRepoModal() {
               setIsRepoListOpen={setIsRepoListOpen}
             />
           )}
-          <div className=" mt-16 flex flex-col">
-            <div className=" text-sm">프로젝트 이름</div>
-            <div className=" w-full h-[40px] border mt-1 pl-3 text-zinc-500 flex items-center bg-zinc-50">
-              {selectedRepo}
+          {selectedRepo ? (
+            <div className=" mt-16 flex flex-col gap-10 mb-48">
+              <div>
+                <div className=" text-sm">프로젝트 이름</div>
+                <div className=" w-full h-[40px] border mt-1 pl-3 text-zinc-500 flex items-center bg-zinc-50">
+                  {selectedRepo}
+                </div>
+                <div className=" text-sm p-1 text-blue-500">
+                  프로젝트 이름은 레포지토리 이름으로 대체됩니다.
+                </div>
+              </div>
+              <div>
+                <div className=" text-sm mb-1">언어/프레임워크 선택</div>
+                <FrameworkList
+                  setIsFrameworkListOpen={setIsFrameworkListOpen}
+                  isFrameworkListOpen={isFrameworkListOpen}
+                  selectedFramework={selectedFramework}
+                  setSelectedFramework={setSelectedFramework}
+                  repos={repos}
+                />
+              </div>
+              <div>
+                <div className=" text-sm">Secret Variables</div>
+                <div className=" w-full h-[40px] border mt-1 pl-3 text-zinc-500 flex items-center bg-zinc-50">
+                  {selectedRepo}
+                </div>
+              </div>
             </div>
-            <div className=" text-sm p-1 text-blue-500">
-              프로젝트 이름은 레포지토리 이름으로 대체됩니다.
+          ) : (
+            <div className=" mt-16 text-center text-zinc-500">
+              빌드를 진행하려면 선택하신 저장소에 Dockerfile이 구성되어 있어야
+              합니다.
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
