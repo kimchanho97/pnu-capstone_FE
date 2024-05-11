@@ -11,6 +11,7 @@ const queryClient = new QueryClient({
     queries: {
       keepPreviousData: true,
       retry: false,
+      refetchOnWindowFocus: false,
     },
   },
 });
