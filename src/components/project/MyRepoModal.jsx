@@ -12,7 +12,7 @@ import RepoList from "./RepoList";
 export default function MyRepoModal() {
   const { closeModal } = useModal();
   const [isRepoListOpen, setIsRepoListOpen] = useState(false);
-  const [seletedRepo, setSelectedRepo] = useState(null);
+  const [selectedRepo, setSelectedRepo] = useState("");
   const user = useAtomValue(userAtom);
   const { isLoading, data: repos } = useQuery(
     ["/repos", user.login], // 쿼리 키에 user.login을 추가하여 유저마다 캐시 관리
@@ -48,12 +48,21 @@ export default function MyRepoModal() {
           ) : (
             <RepoList
               repos={repos}
-              seletedRepo={seletedRepo}
+              selectedRepo={selectedRepo}
               setSelectedRepo={setSelectedRepo}
               isRepoListOpen={isRepoListOpen}
               setIsRepoListOpen={setIsRepoListOpen}
             />
           )}
+          <div className=" mt-16 flex flex-col">
+            <div className=" text-sm">프로젝트 이름</div>
+            <div className=" w-full h-[40px] border mt-1 pl-3 text-zinc-500 flex items-center bg-zinc-50">
+              {selectedRepo}
+            </div>
+            <div className=" text-sm p-1 text-blue-500">
+              프로젝트 이름은 레포지토리 이름으로 대체됩니다.
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -5,7 +5,7 @@ import { userAtom } from "../../store";
 
 export default function RepoList({
   repos,
-  seletedRepo,
+  selectedRepo,
   setSelectedRepo,
   isRepoListOpen,
   setIsRepoListOpen,
@@ -39,7 +39,7 @@ export default function RepoList({
             onClick={handleSelectRepo}
             className=" flex w-full justify-between items-center h-[45px] border p-3 text-sm"
           >
-            {seletedRepo || "저장소를 선택하세요."}
+            {selectedRepo || "저장소를 선택하세요."}
             {isRepoListOpen ? (
               <BsChevronUp size={15} />
             ) : (
