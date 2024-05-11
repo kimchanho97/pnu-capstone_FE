@@ -12,7 +12,7 @@ export default function RepoList({
 }) {
   const user = useAtomValue(userAtom);
 
-  const handleSelectRepo = () => {
+  const handleRepoListOpen = () => {
     setIsRepoListOpen((prev) => !prev);
   };
 
@@ -32,11 +32,9 @@ export default function RepoList({
           />
           <span className=" w-[200px] truncate">{user.login}</span>
         </div>
-
         <div className=" relative w-full">
           <button
-            id="repo"
-            onClick={handleSelectRepo}
+            onClick={handleRepoListOpen}
             className=" flex w-full justify-between items-center h-[45px] border p-3 text-sm"
           >
             {selectedRepo || "저장소를 선택하세요."}
