@@ -7,6 +7,7 @@ import { fetchRepos } from "../../apis/user";
 import { ReactComponent as GithubIcon } from "../../assets/github.svg";
 import useModal from "../../hooks/useModal";
 import { userAtom } from "../../store";
+import { backendList } from "../../utils/constant";
 import FrameworkList from "./FrameworkList";
 import RepoList from "./RepoList";
 import SecretVariableList from "./SecretVariableList";
@@ -24,18 +25,7 @@ export default function MyRepoModal() {
     ["/repos", user.login], // 쿼리 키에 user.login을 추가하여 유저마다 캐시 관리
     () => fetchRepos({ login: user.login }), // 함수 참조 대신 익명 함수 사용하여 호출
   );
-  const isBackend = [
-    "nextjs",
-    "nestjs",
-    "nodejs",
-    "kotlin",
-    "django",
-    "flask",
-    "fastapi",
-    "spring",
-    "nginx",
-    "docker",
-  ].includes(selectedFramework);
+  const isBackend = backendList.includes(selectedFramework);
 
   const handlePortChange = (e) => {
     const { value } = e.target;

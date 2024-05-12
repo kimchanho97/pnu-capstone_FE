@@ -68,3 +68,16 @@ export const icons = {
   mongodb: MongodbIcon,
   postgresql: PostgresqlIcon,
 };
+
+export const backendList = [
+  "nextjs",
+  "nestjs",
+  "nodejs",
+  "kotlin",
+  "django",
+  "flask",
+  "fastapi",
+  "spring",
+  "nginx",
+  "docker",
+];
