@@ -12,7 +12,7 @@ import MainMenu from "./MainMenu";
 export default function MainSection() {
   const { openModal } = useModal();
   const handleCreateProject = () => {
-    openModal({ modalType: "selectRepoModal" });
+    openModal({ modalType: "SelectRepoModal" });
   };
 
   return (
