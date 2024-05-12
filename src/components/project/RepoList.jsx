@@ -20,6 +20,7 @@ export default function RepoList({
     setSelectedRepo(e.target.value);
     setIsRepoListOpen(false);
   };
+
   return (
     <>
       <div className=" text-sm pl-2">GitHub 저장소</div>
@@ -46,14 +47,19 @@ export default function RepoList({
           </button>
           {isRepoListOpen && (
             <ul className="w-full border">
-              {repos.map(({ id, name }) => (
+              {repos.map(({ id, name, private: isPrivate }) => (
                 <li key={id}>
                   <button
                     onClick={selectRepo}
                     value={name}
                     className=" flex w-full justify-between items-center h-[45px] p-3 px-5 text-sm hover:bg-zinc-100"
                   >
-                    {name}
+                    <span>{name}</span>
+                    {isPrivate && (
+                      <span className=" bg-orange-500 text-white p-1 text-xs px-2 rounded-md">
+                        private
+                      </span>
+                    )}
                   </button>
                 </li>
               ))}
