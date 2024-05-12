@@ -8,7 +8,7 @@ export default function LoginPage() {
     // Github 로그인 API 호출
     const clientId = process.env.REACT_APP_GITHUB_CLIENT_ID;
     const redirectUri = "http://localhost:3000/callback";
-    const scope = "repo";
+    const scope = "repo, user";
     const githubOauthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;
     window.location.href = githubOauthUrl;
   };
