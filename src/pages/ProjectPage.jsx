@@ -10,6 +10,30 @@ export default function ProjectPage() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const projects = [
+    {
+      id: 1,
+      name: "capstone-frontend",
+      status: 0,
+      framework: "react",
+      url: "",
+    },
+    {
+      id: 2,
+      name: "capstone-backend",
+      status: 1,
+      framework: "nodejs",
+      url: "",
+    },
+    {
+      id: 3,
+      name: "capstone-deploy",
+      status: 2,
+      framework: "spring",
+      url: "",
+    },
+  ];
+
   useEffect(() => {
     const path = location.pathname.split("/")[2];
     const user = sessionStorage.getItem("user");
@@ -20,8 +44,8 @@ export default function ProjectPage() {
 
   return (
     <div className="flex">
-      <SideSection />
-      <MainSection />
+      <SideSection projects={projects} />
+      <MainSection projects={projects} />
     </div>
   );
 }
