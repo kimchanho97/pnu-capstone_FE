@@ -1,14 +1,16 @@
 import { useAtom } from "jotai";
-import SelectRepoModal from "../components/project/SelectRepoModal";
-import { modalAtom } from "../store";
 import MyRepoModal from "../components/project/MyRepoModal";
+import SelectRepoModal from "../components/project/SelectRepoModal";
+import TemplateModal from "../components/project/TemplateModal";
+import { modalAtom } from "../store";
 
 export default function useModal() {
   const [modal, setModal] = useAtom(modalAtom);
 
   const components = {
-    selectRepoModal: <SelectRepoModal />,
+    SelectRepoModal: <SelectRepoModal />,
     MyRepoModal: <MyRepoModal />,
+    TemplateModal: <TemplateModal />,
   };
 
   const closeModal = () => {
