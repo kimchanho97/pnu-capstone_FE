@@ -10,7 +10,7 @@ export default function SelectRepoModal() {
   const modalRef = useRef(null);
   const modalWrapperRef = useRef(null);
   const { closeModal, openModal } = useModal();
-  const handleMyRepoDeploy = () => {
+  const openMyRepoModal = () => {
     openModal({ modalType: "MyRepoModal" });
   };
   useOnClickOutside(modalRef, modalWrapperRef, closeModal);
@@ -32,7 +32,7 @@ export default function SelectRepoModal() {
         </div>
         <button
           className=" flex justify-between items-center px-4 h-[44px] w-full hover:bg-zinc-100 rounded-md"
-          onClick={handleMyRepoDeploy}
+          onClick={openMyRepoModal}
         >
           <div className=" flex items-center gap-3">
             <CiSquarePlus className=" text-green-500" />
