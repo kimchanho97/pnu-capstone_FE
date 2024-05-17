@@ -92,9 +92,12 @@ export default function ProjectItem({
           <button
             className={cn(
               " bg-zinc-200 rounded-md px-3 py-2 text-xs",
-              project.status === 0 && "bg-blue-200 hover:bg-blue-300",
+              (project.status === 0 ||
+                project.status === 2 ||
+                project.status === 4) &&
+                "bg-blue-200 hover:bg-blue-300",
             )}
-            disabled={project.status !== 0}
+            disabled={project.status === 1 || project.status === 3}
           >
             빌드하기
           </button>
