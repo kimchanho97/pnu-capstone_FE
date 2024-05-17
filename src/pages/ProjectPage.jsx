@@ -16,21 +16,30 @@ export default function ProjectPage() {
       name: "capstone-frontend",
       status: 0,
       framework: "react",
-      url: "",
     },
     {
       id: 2,
       name: "capstone-backend",
       status: 1,
       framework: "nodejs",
-      url: "",
     },
     {
       id: 3,
       name: "capstone-deploy",
       status: 2,
       framework: "spring",
-      url: "",
+    },
+    {
+      id: 4,
+      name: "capstone-server",
+      status: 3,
+      framework: "nestjs",
+    },
+    {
+      id: 5,
+      name: "capstone-web",
+      status: 4,
+      framework: "vue",
     },
   ];
 

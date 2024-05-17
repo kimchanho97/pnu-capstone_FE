@@ -1,11 +1,31 @@
 import cn from "classnames";
 import { useAtomValue } from "jotai";
 import React from "react";
-import { FaCaretSquareRight, FaSquare } from "react-icons/fa";
 import { IoTerminal } from "react-icons/io5";
 import { ReactComponent as GithubIcon } from "../../assets/github.svg";
 import { userAtom } from "../../store";
 import { backendList, icons } from "../../utils/constant";
+
+// 상태에 따른 스타일 및 텍스트 매핑
+const statusStyles = {
+  0: { color: "red", text: "빌드 전" },
+  1: { color: "amber", text: "빌드 중" },
+  2: { color: "amber", text: "빌드 완료" },
+  3: { color: "amber", text: "배포 중" },
+  4: { color: "green", text: "배포 완료" },
+};
+
+const getStatusStyle = (status) => {
+  const color = statusStyles[status].color;
+  return {
+    circleBg: `bg-${color}-200`,
+    dotBg: `bg-${color}-500`,
+    textClass: status === 4 ? `text-${color}-600` : `text-${color}-500`,
+  };
+};
+const getStatusText = (status) => {
+  return statusStyles[status].text;
+};
 
 export default function ProjectItem({ project }) {
   const ProjectIconComponent = icons[project?.framework];
@@ -30,57 +50,54 @@ export default function ProjectItem({ project }) {
         </button>
       </div>
       <div className=" flex justify-between">
-        <div className=" flex items-center gap-4">
-          <button disabled={project.status !== 2}>
-            <FaCaretSquareRight
-              className={cn("w-4 h-4", project.status !== 2 && "text-zinc-300")}
-            />
-          </button>
-          <button disabled={project.status === 2}>
-            <FaSquare
-              className={cn("w-3 h-3", project.status === 2 && "text-zinc-300")}
-            />
-          </button>
+        <div className=" flex gap-1 items-center">
           <button>
             <IoTerminal className=" w-4 h-4" />
           </button>
           <div className=" flex gap-1">
             <div
               className={cn(
-                " rounded-full w-4 h-4 relative",
-                project.status === 0 && "bg-amber-200",
-                project.status === 1 && "bg-green-200",
-                project.status === 2 && "bg-red-200",
+                "rounded-full w-4 h-4 relative",
+                getStatusStyle(project.status).circleBg,
               )}
             >
               <div
                 className={cn(
-                  " absolute rounded-full w-2 h-2 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-                  project.status === 0 && "bg-amber-500",
-                  project.status === 1 && "bg-green-500",
-                  project.status === 2 && "bg-red-500",
+                  "absolute rounded-full w-2 h-2 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+                  getStatusStyle(project.status).dotBg,
                 )}
               />
             </div>
             <span
               className={cn(
-                " text-xs",
-                project.status === 0 && "text-amber-500",
-                project.status === 1 && "text-green-600",
-                project.status === 2 && "text-red-500",
+                "text-xs",
+                getStatusStyle(project.status).textClass,
               )}
             >
-              {project.status === 0
-                ? "빌드중"
-                : project.status === 1
-                ? "실행중"
-                : "중지됨"}
+              {getStatusText(project.status)}
             </span>
           </div>
         </div>
-        <button className=" bg-zinc-200 rounded-md px-3 py-2 text-xs">
-          접속하기
-        </button>
+        <div className=" flex gap-1">
+          <button
+            className={cn(
+              " bg-zinc-200 rounded-md px-3 py-2 text-xs",
+              project.status === 0 && "bg-blue-200 hover:bg-blue-300",
+            )}
+            disabled={project.status !== 0}
+          >
+            빌드하기
+          </button>
+          <button
+            className={cn(
+              " bg-zinc-200 rounded-md px-3 py-2 text-xs",
+              project.status === 2 && "bg-blue-200 hover:bg-blue-300",
+            )}
+            disabled={project.status !== 2}
+          >
+            배포하기
+          </button>
+        </div>
       </div>
     </div>
   );
