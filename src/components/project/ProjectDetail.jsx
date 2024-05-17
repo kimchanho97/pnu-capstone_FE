@@ -7,20 +7,36 @@ import ProjectItem from "./ProjectItem";
 import ProjectSetting from "./ProjectSetting";
 
 const projectDetail = {
-  deployments: [
+  builds: [
     {
-      date: "2021-09-01 12:00:00",
+      id: 1,
+      build_date: "2021-09-01 12:00:00",
       commit_msg: "Initial commit",
       image_name: "iserser23423/capstone-frontend",
       image_tag: "latest",
     },
     {
-      date: "2021-09-02 12:00:00",
+      id: 2,
+      build_date: "2021-09-02 12:00:00",
       commit_msg: "Add README.md",
       image_name: "iserser23423/capstone-frontend",
       image_tag: "latest",
     },
   ],
+  deployments: [
+    {
+      id: 1,
+      deploy_date: "2021-09-01 12:00:00",
+      commit_msg: "Initial deploy",
+    },
+    {
+      id: 2,
+      deploy_date: "2021-09-02 12:00:00",
+      commit_msg: "Add README.md",
+    },
+  ],
+  domain_url: "https://capstone-frontend.com",
+  webhook_url: "https://webhook.capstone-frontend.com",
   secrets: [
     {
       key: "SECRET_KEY",
@@ -58,11 +74,18 @@ export default function ProjectDetail({ project, setSelectedProject }) {
         setSelectedDetailOption={setSelectedDetailOption}
       />
       {selectedDetailOption === "배포 내역" ? (
-        <DeploymentHistory deployments={projectDetail.deployments} />
+        <DeploymentHistory
+          project={project}
+          builds={projectDetail.builds}
+          deployments={projectDetail.deployments}
+        />
       ) : selectedDetailOption === "연결 정보" ? (
-        <ConnectionInfo />
+        <ConnectionInfo
+          webhookUrl={projectDetail.webhook_url}
+          domainUrl={projectDetail.domain_url}
+        />
       ) : (
-        <ProjectSetting secrets={projectDetail.secrets} />
+        <ProjectSetting secrets={projectDetail.secrets} project={project} />
       )}
     </div>
   );
