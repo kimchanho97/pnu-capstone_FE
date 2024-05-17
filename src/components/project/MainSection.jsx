@@ -1,14 +1,16 @@
+import cn from "classnames";
 import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { GoGitBranch } from "react-icons/go";
 import useModal from "../../hooks/useModal";
 import MainMenu from "./MainMenu";
+import ProjectDetail from "./ProjectDetail";
 import ProjectItem from "./ProjectItem";
 
 export default function MainSection({ projects }) {
   const { openModal } = useModal();
-  const [selectedProject, setSelectedProject] = useState(null);
-  const handleCreateProject = () => {
+  const [selectedProject, setSelectedProject] = useState(false);
+  const openSelectRepoModal = () => {
     openModal({ modalType: "SelectRepoModal" });
   };
 
@@ -34,22 +36,46 @@ export default function MainSection({ projects }) {
             </div>
           </div>
           <div
-            className=" grid grid-cols-1 gap-7 mt-10 sm:grid-cols-2 md:grid-cols-3 overflow-y-auto"
-            style={{ maxHeight: `calc(100vh - 240px)` }}
+            className={cn(
+              {
+                " grid grid-cols-1 gap-7 mt-10 sm:grid-cols-2 md:grid-cols-3 overflow-y-auto":
+                  !selectedProject,
+              },
+              {
+                "mt-3 overflow-y-auto": selectedProject,
+              },
+            )}
+            style={{ maxHeight: `calc(100vh - 200px)` }}
           >
-            {projects.map((project) => (
-              <ProjectItem key={project.id} project={project} />
-            ))}
-            <button
-              className=" w-[320px] h-[200px] hover:border border-dotted rounded-xl border-blue-300 group"
-              onClick={handleCreateProject}
-            >
-              <div className=" w-full h-full flex justify-center items-center">
-                <div className=" bg-sky-300 w-10 h-10 rounded-full relative group-hover:bg-sky-500">
-                  <FaPlus className=" w-5 h-5 text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-                </div>
-              </div>
-            </button>
+            {selectedProject ? (
+              <ProjectDetail
+                project={selectedProject}
+                setSelectedProject={setSelectedProject}
+              />
+            ) : (
+              <>
+                {projects.map((project) => (
+                  <ProjectItem
+                    key={project.id}
+                    project={project}
+                    setSelectedProject={setSelectedProject}
+                    className={
+                      "border rounded-xl shadow p-5 h-[200px] w-[320px]"
+                    }
+                  />
+                ))}
+                <button
+                  className=" w-[320px] h-[200px] hover:border border-dotted rounded-xl border-blue-300 group"
+                  onClick={openSelectRepoModal}
+                >
+                  <div className=" w-full h-full flex justify-center items-center">
+                    <div className=" bg-sky-300 w-10 h-10 rounded-full relative group-hover:bg-sky-500">
+                      <FaPlus className=" w-5 h-5 text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                    </div>
+                  </div>
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

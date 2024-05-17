@@ -27,7 +27,11 @@ const getStatusText = (status) => {
   return statusStyles[status].text;
 };
 
-export default function ProjectItem({ project }) {
+export default function ProjectItem({
+  project,
+  setSelectedProject,
+  className,
+}) {
   const ProjectIconComponent = icons[project?.framework];
   const subtitle = backendList.includes(project.framework) ? "server" : "web";
   const user = useAtomValue(userAtom);
@@ -36,9 +40,15 @@ export default function ProjectItem({ project }) {
   };
 
   return (
-    <div className=" flex flex-col justify-between border rounded-xl shadow p-5 h-[200px] w-[320px]">
+    <div className={cn("flex flex-col justify-between bg-white", className)}>
       <div className=" flex gap-2 w-full justify-between">
-        <button className=" flex gap-2">
+        <button
+          className=" flex gap-2"
+          onClick={() => {
+            setSelectedProject(project);
+          }}
+          disabled={className.includes("w-full")}
+        >
           <ProjectIconComponent className=" w-10 h-10" />
           <div className=" flex flex-col text-sm items-start">
             <span className=" font-semibold">{project.name}</span>
