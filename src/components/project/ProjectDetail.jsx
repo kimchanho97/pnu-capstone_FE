@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { IoChevronBackOutline } from "react-icons/io5";
 import ConnectionInfo from "./ConnectionInfo";
 import DeploymentHistory from "./DeploymentHistory";
@@ -52,14 +52,10 @@ const projectDetail = {
 export default function ProjectDetail({ project, setSelectedProject }) {
   const [selectedDetailOption, setSelectedDetailOption] = useState("배포 내역");
 
-  useEffect(() => {
-    console.log(project);
-  }, []);
-
   return (
     <div className=" flex flex-col w-full">
       <button
-        className=" flex items-center gap-2 mb-3 text-zinc-500"
+        className=" flex items-center gap-2 mb-8 text-zinc-500"
         onClick={() => setSelectedProject(null)}
       >
         <IoChevronBackOutline size={20} />

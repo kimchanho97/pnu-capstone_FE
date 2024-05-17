@@ -96,6 +96,7 @@ export default function ProjectItem({
                 project.status === 2 ||
                 project.status === 4) &&
                 "bg-blue-200 hover:bg-blue-300",
+              { "text-zinc-500": project.status === 1 || project.status === 3 },
             )}
             disabled={project.status === 1 || project.status === 3}
           >
@@ -103,8 +104,9 @@ export default function ProjectItem({
           </button>
           <button
             className={cn(
-              " bg-zinc-200 rounded-md px-3 py-2 text-xs",
-              project.status === 2 && "bg-blue-200 hover:bg-blue-300",
+              " bg-zinc-200 rounded-md px-3 py-2 text-xs text-zinc-500",
+              project.status === 2 &&
+                " text-black bg-blue-200 hover:bg-blue-300",
             )}
             disabled={project.status !== 2}
           >

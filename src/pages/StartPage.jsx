@@ -64,7 +64,7 @@ export default function StartPage() {
               ({ Icon, title, subtitle, value }, index) =>
                 (option === "all" || option === subtitle) && (
                   <div
-                    className=" flex flex-col justify-between border rounded-xl shadow-md p-5 h-[180px]"
+                    className=" flex flex-col justify-between border rounded-xl shadow-md p-5 h-[180px] min-w-[220px]"
                     key={index}
                   >
                     <div className=" flex justify-between">
