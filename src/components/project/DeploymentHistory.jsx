@@ -1,9 +1,12 @@
+import { useAtomValue } from "jotai";
 import React from "react";
 import { FaCheckCircle } from "react-icons/fa";
-import { MdOutlineRadioButtonUnchecked } from "react-icons/md";
-import { userAtom } from "../../store";
-import { useAtomValue } from "jotai";
+import {
+  MdOutlineArrowDropDownCircle,
+  MdOutlineRadioButtonUnchecked,
+} from "react-icons/md";
 import { ReactComponent as GithubIcon } from "../../assets/github.svg";
+import { userAtom } from "../../store";
 
 export default function DeploymentHistory({ deployments, builds, project }) {
   const user = useAtomValue(userAtom);
@@ -16,7 +19,10 @@ export default function DeploymentHistory({ deployments, builds, project }) {
   return (
     <div>
       <div>
-        <div className=" text-sm py-1">배포 내역</div>
+        <div className=" text-sm py-2 flex items-center gap-1">
+          <MdOutlineArrowDropDownCircle className=" text-green-600" />
+          <span>배포 내역</span>
+        </div>
         <div className=" flex flex-col gap-2">
           {deployments.map(({ id, deploy_date, commit_msg }, index) => (
             <div
@@ -56,7 +62,10 @@ export default function DeploymentHistory({ deployments, builds, project }) {
         </div>
       </div>
       <div className=" mt-24 mb-12">
-        <div className=" text-sm py-1">빌드 내역</div>
+        <div className=" text-sm py-2 flex items-center gap-1">
+          <MdOutlineArrowDropDownCircle className=" text-green-600" />
+          <span>빌드 내역</span>
+        </div>
         <div className=" flex flex-col gap-2">
           {builds.map(
             ({ id, build_date, commit_msg, image_name, image_tag }, index) => (

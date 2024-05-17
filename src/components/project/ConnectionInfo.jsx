@@ -1,5 +1,6 @@
 import React from "react";
 import { FaLocationArrow } from "react-icons/fa";
+import { MdOutlineArrowDropDownCircle } from "react-icons/md";
 
 export default function ConnectionInfo({ webhookUrl, domainUrl }) {
   const linkDomainUrl = () => {
@@ -7,7 +8,10 @@ export default function ConnectionInfo({ webhookUrl, domainUrl }) {
   };
   return (
     <div>
-      <div className=" text-sm py-1">Domain</div>
+      <div className=" text-sm py-2 flex items-center gap-1">
+        <MdOutlineArrowDropDownCircle className=" text-green-600" />
+        <span>Domain</span>
+      </div>
       {domainUrl && (
         <div className=" bg-white p-5 flex justify-between items-center h-[70px]">
           <div className=" flex items-center gap-5">
@@ -27,7 +31,10 @@ export default function ConnectionInfo({ webhookUrl, domainUrl }) {
           </button>
         </div>
       )}
-      <div className=" text-sm py-1 mt-8">WebHook</div>
+      <div className=" text-sm py-2 flex items-center gap-1 mt-8">
+        <MdOutlineArrowDropDownCircle className=" text-green-600" />
+        <span>WebHook</span>
+      </div>
       {webhookUrl && (
         <div className=" bg-white p-5 flex justify-between items-center h-[70px]">
           <div className=" flex items-center gap-5">
