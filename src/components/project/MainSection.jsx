@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { GoGitBranch } from "react-icons/go";
 import useModal from "../../hooks/useModal";
@@ -7,7 +7,7 @@ import ProjectItem from "./ProjectItem";
 
 export default function MainSection({ projects }) {
   const { openModal } = useModal();
-
+  const [selectedProject, setSelectedProject] = useState(null);
   const handleCreateProject = () => {
     openModal({ modalType: "SelectRepoModal" });
   };
