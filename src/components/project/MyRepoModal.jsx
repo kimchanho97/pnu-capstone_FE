@@ -19,7 +19,13 @@ export default function MyRepoModal() {
   const [isFrameworkListOpen, setIsFrameworkListOpen] = useState(false);
   const [selectedFramework, setSelectedFramework] = useState("");
   const [secretVariables, setSecretVariables] = useState([]);
-  const [port, setPort] = useState(null);
+  const [port, setPort] = useState("");
+  const [autoScailing, setAutoScailing] = useState({
+    minReplicas: "",
+    maxReplicas: "",
+  });
+  const [autoScailingEnabled, setAutoScailingEnabled] = useState(false);
+  const [cpuPercentage, setCpuPercentage] = useState(80);
   const user = useAtomValue(userAtom);
   const { isLoading, data: repos } = useQuery(
     ["/repos", user.login], // 쿼리 키에 user.login을 추가하여 유저마다 캐시 관리
@@ -27,9 +33,20 @@ export default function MyRepoModal() {
   );
   const isBackend = backendList.includes(selectedFramework);
 
-  const handlePortChange = (e) => {
-    const { value } = e.target;
-    setPort(value);
+  const handleOnPortChange = (e) => {
+    setPort(e.target.value);
+  };
+
+  const handleOnAutoScailingChange = (e) => {
+    const { name, value } = e.target;
+    setAutoScailing((prev) => ({ ...prev, [name]: value }));
+    setAutoScailingEnabled(
+      autoScailing.minReplicas && autoScailing.maxReplicas,
+    );
+  };
+
+  const handleOnCpuPercentageChange = (e) => {
+    setCpuPercentage(e.target.value);
   };
 
   return (
@@ -96,16 +113,59 @@ export default function MyRepoModal() {
                 />
               </div>
               {isBackend && (
-                <div>
-                  <div className=" text-sm mb-1">Port</div>
-                  <input
-                    type="text"
-                    className="w-full border h-[40px] p-4"
-                    placeholder="Port"
-                    value={port}
-                    onChange={handlePortChange}
-                  />
-                </div>
+                <>
+                  <div>
+                    <div className=" text-sm mb-1">Port</div>
+                    <input
+                      type="text"
+                      className="w-full border h-[40px] p-4"
+                      placeholder="Port"
+                      value={port}
+                      onChange={handleOnPortChange}
+                    />
+                  </div>
+                  <div>
+                    <div className=" text-sm mb-1">최소 Pod(1 ~ 10)</div>
+                    <input
+                      type="number"
+                      min={1}
+                      max={10}
+                      name="minReplicas"
+                      className="w-full border h-[40px] p-4"
+                      placeholder="최소 Pod 수 : 1 ~ 10"
+                      value={autoScailing.minReplicas}
+                      onChange={handleOnAutoScailingChange}
+                    />
+                  </div>
+                  <div>
+                    <div className=" text-sm mb-1">최대 Pod(1 ~ 10)</div>
+                    <input
+                      type="number"
+                      min={1}
+                      max={10}
+                      name="maxReplicas"
+                      className="w-full border h-[40px] p-4"
+                      placeholder="최대 Pod 수 : 1 ~ 10"
+                      value={autoScailing.maxReplicas}
+                      onChange={handleOnAutoScailingChange}
+                    />
+                  </div>
+                  <div>
+                    <div className=" text-sm mb-1">
+                      CPU 사용량 임계치(해당 수치 이상일 때 파드를 추가로
+                      생성합니다)
+                    </div>
+                    <input
+                      type="number"
+                      min={1}
+                      max={100}
+                      className="w-full border h-[40px] p-4"
+                      placeholder="Default: 80"
+                      value={cpuPercentage}
+                      onChange={handleOnCpuPercentageChange}
+                    />
+                  </div>
+                </>
               )}
               <button className=" w-full h-[40px] bg-blue-500 text-white rounded-lg mt-10">
                 배포하기
