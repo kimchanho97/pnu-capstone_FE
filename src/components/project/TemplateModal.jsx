@@ -149,7 +149,7 @@ export default function TemplateModal() {
             </div>
           </div>
           <label
-            className=" relative cursor-pointer mt-6 flex gap-2 items-center"
+            className=" relative cursor-pointer mt-6 flex gap-2 items-center w-fit"
             htmlFor="isPrivate"
           >
             <input
@@ -157,7 +157,7 @@ export default function TemplateModal() {
               className=" w-5 h-5 cursor-pointer"
               type="checkbox"
               onChange={handleOnisPrivate}
-              value={isPrivate}
+              checked={isPrivate}
             />
             {!isPrivate && (
               <FaCheck
