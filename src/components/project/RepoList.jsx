@@ -54,9 +54,9 @@ export default function RepoList({
                     value={name}
                     className=" flex w-full justify-between items-center h-[45px] p-3 px-5 text-sm hover:bg-zinc-100"
                   >
-                    <span>{name}</span>
+                    <span className=" pointer-events-none">{name}</span>
                     {isPrivate && (
-                      <span className=" bg-orange-500 text-white p-1 text-xs px-2 rounded-md">
+                      <span className=" bg-orange-500 text-white p-1 text-xs px-2 rounded-md pointer-events-none">
                         private
                       </span>
                     )}
