@@ -6,7 +6,7 @@ export default function SecretVariableList({
   setSecretVariables,
 }) {
   const [secretVariable, setSecretVariable] = useState({
-    name: "",
+    key: "",
     value: "",
   });
   const handleInputChange = (e) => {
@@ -15,10 +15,10 @@ export default function SecretVariableList({
   };
 
   const handleAddSecretVariable = () => {
-    if (!secretVariable.name || !secretVariable.value) return;
+    if (!secretVariable.key || !secretVariable.value) return;
     setSecretVariables((prev) => [...prev, secretVariable]);
     setSecretVariable({
-      name: "",
+      key: "",
       value: "",
     });
   };
@@ -36,8 +36,8 @@ export default function SecretVariableList({
           type="text"
           className="w-full border h-[40px] p-4"
           placeholder="Name"
-          name="name"
-          value={secretVariable.name}
+          name="key"
+          value={secretVariable.key}
           onChange={handleInputChange}
         />
         <input
@@ -59,7 +59,7 @@ export default function SecretVariableList({
               <input
                 type="text"
                 className="w-full border h-[40px] p-4 bg-zinc-100"
-                value={secretVariable.name}
+                value={secretVariable.key}
                 readOnly
               />
               <input
