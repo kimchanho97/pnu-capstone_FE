@@ -1,6 +1,7 @@
 import CircularProgress from "@mui/material/CircularProgress";
 import { useAtomValue } from "jotai";
 import React, { useState } from "react";
+import { FaCheck } from "react-icons/fa";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { useQuery } from "react-query";
 import { fetchRepos } from "../../apis/user";
@@ -20,7 +21,7 @@ export default function MyRepoModal() {
   const [selectedFramework, setSelectedFramework] = useState("");
   const [secretVariables, setSecretVariables] = useState([]);
   const [port, setPort] = useState("");
-  const [autoScailing, setAutoScailing] = useState({
+  const [autoScaling, setAutoScaling] = useState({
     minReplicas: "",
     maxReplicas: "",
   });
@@ -37,12 +38,16 @@ export default function MyRepoModal() {
     setPort(e.target.value);
   };
 
-  const handleOnAutoScailingChange = (e) => {
+  const handleOnautoScalingEnabled = (e) => {
+    setAutoScailingEnabled(e.target.checked);
+    if (!e.target.checked) {
+      setAutoScaling({ minReplicas: "", maxReplicas: "" });
+    }
+  };
+
+  const handleOnAutoScalingChange = (e) => {
     const { name, value } = e.target;
-    setAutoScailing((prev) => ({ ...prev, [name]: value }));
-    setAutoScailingEnabled(
-      autoScailing.minReplicas && autoScailing.maxReplicas,
-    );
+    setAutoScaling((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleOnCpuPercentageChange = (e) => {
@@ -124,47 +129,70 @@ export default function MyRepoModal() {
                       onChange={handleOnPortChange}
                     />
                   </div>
-                  <div>
-                    <div className=" text-sm mb-1">최소 Pod(1 ~ 10)</div>
+                  <label
+                    className=" relative cursor-pointer flex gap-2 items-center"
+                    htmlFor="autoScailingEnabled"
+                  >
                     <input
-                      type="number"
-                      min={1}
-                      max={10}
-                      name="minReplicas"
-                      className="w-full border h-[40px] p-4"
-                      placeholder="최소 Pod 수 : 1 ~ 10"
-                      value={autoScailing.minReplicas}
-                      onChange={handleOnAutoScailingChange}
+                      id="autoScailingEnabled"
+                      className=" w-5 h-5 cursor-pointer"
+                      type="checkbox"
+                      onChange={handleOnautoScalingEnabled}
+                      value={autoScailingEnabled}
                     />
-                  </div>
-                  <div>
-                    <div className=" text-sm mb-1">최대 Pod(1 ~ 10)</div>
-                    <input
-                      type="number"
-                      min={1}
-                      max={10}
-                      name="maxReplicas"
-                      className="w-full border h-[40px] p-4"
-                      placeholder="최대 Pod 수 : 1 ~ 10"
-                      value={autoScailing.maxReplicas}
-                      onChange={handleOnAutoScailingChange}
-                    />
-                  </div>
-                  <div>
-                    <div className=" text-sm mb-1">
-                      CPU 사용량 임계치(해당 수치 이상일 때 파드를 추가로
-                      생성합니다)
-                    </div>
-                    <input
-                      type="number"
-                      min={1}
-                      max={100}
-                      className="w-full border h-[40px] p-4"
-                      placeholder="Default: 80"
-                      value={cpuPercentage}
-                      onChange={handleOnCpuPercentageChange}
-                    />
-                  </div>
+                    {!autoScailingEnabled && (
+                      <FaCheck
+                        className=" absolute top-1 left-1 text-zinc-400"
+                        size={12}
+                      />
+                    )}
+                    <span className=" text-sm">Auto Scaling 사용</span>
+                  </label>
+                  {autoScailingEnabled && (
+                    <>
+                      <div>
+                        <div className=" text-sm mb-1">최소 Pod(1 ~ 10)</div>
+                        <input
+                          type="number"
+                          min={1}
+                          max={10}
+                          name="minReplicas"
+                          className="w-full border h-[40px] p-4"
+                          placeholder="최소 Pod 수 : 1 ~ 10"
+                          value={autoScaling.minReplicas}
+                          onChange={handleOnAutoScalingChange}
+                        />
+                      </div>
+                      <div>
+                        <div className=" text-sm mb-1">최대 Pod(1 ~ 10)</div>
+                        <input
+                          type="number"
+                          min={1}
+                          max={10}
+                          name="maxReplicas"
+                          className="w-full border h-[40px] p-4"
+                          placeholder="최대 Pod 수 : 1 ~ 10"
+                          value={autoScaling.maxReplicas}
+                          onChange={handleOnAutoScalingChange}
+                        />
+                      </div>
+                      <div>
+                        <div className=" text-sm mb-1">
+                          CPU 사용량 임계치(해당 수치 이상일 때 파드를 추가로
+                          생성합니다)
+                        </div>
+                        <input
+                          type="number"
+                          min={1}
+                          max={100}
+                          className="w-full border h-[40px] p-4"
+                          placeholder="Default: 80"
+                          value={cpuPercentage}
+                          onChange={handleOnCpuPercentageChange}
+                        />
+                      </div>
+                    </>
+                  )}
                 </>
               )}
               <button className=" w-full h-[40px] bg-blue-500 text-white rounded-lg mt-10">
