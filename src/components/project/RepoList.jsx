@@ -28,7 +28,7 @@ export default function RepoList({
         <div className=" border w-[200px] p-2 flex gap-2 items-center h-[45px]">
           <img
             className=" w-8 h-8 rounded-full"
-            src={user.avatar_url}
+            src={user.avatarUrl}
             alt="avatar"
           />
           <span className=" w-[200px] truncate">{user.login}</span>

@@ -11,7 +11,7 @@ export default function SideSection({ projects }) {
       <div className=" pt-3 flex justify-between">
         <img
           className=" w-14 h-14 rounded-full"
-          src={user.avatar_url}
+          src={user.avatarUrl}
           alt="avatar"
         />
         <div>

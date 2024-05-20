@@ -45,7 +45,7 @@ export default function MainSection({ projects }) {
                 "mt-3 overflow-y-auto": selectedProject,
               },
             )}
-            style={{ maxHeight: `calc(100vh - 200px)` }}
+            style={{ maxHeight: `calc(100vh - 220px)` }}
           >
             {selectedProject ? (
               <ProjectDetail

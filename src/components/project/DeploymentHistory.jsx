@@ -24,7 +24,7 @@ export default function DeploymentHistory({ deployments, builds, project }) {
           <span>배포 내역</span>
         </div>
         <div className=" flex flex-col gap-2">
-          {deployments.map(({ id, deploy_date, commit_msg }, index) => (
+          {deployments.map(({ id, deployDate, commitMsg }, index) => (
             <div
               key={id}
               className=" w-full bg-white p-5 flex gap-3 items-center justify-between"
@@ -49,9 +49,9 @@ export default function DeploymentHistory({ deployments, builds, project }) {
                       </span>
                     </button>
                     <div>:</div>
-                    <div className=" font-semibold">{commit_msg}</div>
+                    <div className=" font-semibold">{commitMsg}</div>
                   </div>
-                  <div className=" text-xs">{deploy_date}</div>
+                  <div className=" text-xs">{deployDate}</div>
                 </div>
               </div>
               <button className=" bg-zinc-200 rounded-md px-3 py-2 text-xs hover:bg-blue-200">
@@ -68,7 +68,7 @@ export default function DeploymentHistory({ deployments, builds, project }) {
         </div>
         <div className=" flex flex-col gap-2">
           {builds.map(
-            ({ id, build_date, commit_msg, image_name, image_tag }, index) => (
+            ({ id, buildDate, commitMsg, imageName, imageTag }, index) => (
               <div
                 key={id}
                 className=" w-full bg-white p-5 flex gap-3 items-center justify-between"
@@ -93,9 +93,9 @@ export default function DeploymentHistory({ deployments, builds, project }) {
                         </span>
                       </button>
                       <div>:</div>
-                      <div className=" font-semibold">{commit_msg}</div>
+                      <div className=" font-semibold">{commitMsg}</div>
                     </div>
-                    <div className=" text-xs">{build_date}</div>
+                    <div className=" text-xs">{buildDate}</div>
                   </div>
                 </div>
                 <button className=" bg-zinc-200 rounded-md px-3 py-2 text-xs hover:bg-blue-200">

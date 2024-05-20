@@ -7,7 +7,7 @@ export const userAtom = atomWithStorage(
   {
     id: "",
     login: "",
-    avatar_url: "",
+    avatarUrl: "",
     nickname: "",
   },
   storage,

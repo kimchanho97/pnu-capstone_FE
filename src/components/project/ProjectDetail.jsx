@@ -10,33 +10,33 @@ const projectDetail = {
   builds: [
     {
       id: 1,
-      build_date: "2021-09-01 12:00:00",
-      commit_msg: "Initial commit",
-      image_name: "iserser23423/capstone-frontend",
-      image_tag: "latest",
+      buildDate: "2021-09-01 12:00:00",
+      commitMsg: "Initial commit",
+      imageName: "iserser23423/capstone-frontend",
+      imageTag: "latest",
     },
     {
       id: 2,
-      build_date: "2021-09-02 12:00:00",
-      commit_msg: "Add README.md",
-      image_name: "iserser23423/capstone-frontend",
-      image_tag: "latest",
+      buildDate: "2021-09-02 12:00:00",
+      commitMsg: "Add README.md",
+      imageName: "iserser23423/capstone-frontend",
+      imageTag: "latest",
     },
   ],
   deployments: [
     {
       id: 1,
-      deploy_date: "2021-09-01 12:00:00",
-      commit_msg: "Initial deploy",
+      deployDate: "2021-09-01 12:00:00",
+      commitMsg: "Initial deploy",
     },
     {
       id: 2,
-      deploy_date: "2021-09-02 12:00:00",
-      commit_msg: "Add README.md",
+      deployDate: "2021-09-02 12:00:00",
+      commitMsg: "Add README.md",
     },
   ],
-  domain_url: "https://capstone-frontend.com",
-  webhook_url: "https://webhook.capstone-frontend.com",
+  domainUrl: "https://capstone-frontend.com",
+  webhookUrl: "https://webhook.capstone-frontend.com",
   secrets: [
     {
       key: "SECRET_KEY",
@@ -77,8 +77,8 @@ export default function ProjectDetail({ project, setSelectedProject }) {
         />
       ) : selectedDetailOption === "연결 정보" ? (
         <ConnectionInfo
-          webhookUrl={projectDetail.webhook_url}
-          domainUrl={projectDetail.domain_url}
+          webhookUrl={projectDetail.webhookUrl}
+          domainUrl={projectDetail.domainUrl}
         />
       ) : (
         <ProjectSetting secrets={projectDetail.secrets} project={project} />
