@@ -148,24 +148,25 @@ export default function TemplateModal() {
               )}
             </div>
           </div>
-          <div className=" mt-3 flex gap-2 items-center">
-            <label className=" relative cursor-pointer" htmlFor="isPrivate">
-              <input
-                id="isPrivate"
-                className=" w-5 h-5 cursor-pointer"
-                type="checkbox"
-                onChange={handleOnisPrivate}
-                value={isPrivate}
+          <label
+            className=" relative cursor-pointer mt-6 flex gap-2 items-center"
+            htmlFor="isPrivate"
+          >
+            <input
+              id="isPrivate"
+              className=" w-5 h-5 cursor-pointer"
+              type="checkbox"
+              onChange={handleOnisPrivate}
+              value={isPrivate}
+            />
+            {!isPrivate && (
+              <FaCheck
+                className=" absolute top-1 left-1 text-zinc-400"
+                size={12}
               />
-              {!isPrivate && (
-                <FaCheck
-                  className=" absolute top-1 left-1 text-zinc-400"
-                  size={12}
-                />
-              )}
-            </label>
+            )}
             <span className=" text-sm">비공개 저장소로 생성하기</span>
-          </div>
+          </label>
           {isSubmitting ? (
             <div className="mt-14 flex justify-center items-center">
               <CircularProgress size={25} />
