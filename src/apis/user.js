@@ -10,6 +10,7 @@ export const githubLogin = async (code) => {
 };
 
 export const fetchRepos = async ({ login }) => {
+  // 쿼리 키: ["/repos", user.login]
   const token = sessionStorage.getItem("accessToken");
   const response = await axios.get(`https://api.github.com/user/repos`, {
     headers: {
