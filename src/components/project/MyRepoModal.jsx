@@ -1,9 +1,10 @@
 import CircularProgress from "@mui/material/CircularProgress";
 import { useAtomValue } from "jotai";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaCheck } from "react-icons/fa";
 import { IoIosCloseCircleOutline } from "react-icons/io";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
+import { createProject } from "../../apis/project";
 import { fetchRepos } from "../../apis/user";
 import { ReactComponent as GithubIcon } from "../../assets/github.svg";
 import useModal from "../../hooks/useModal";
@@ -21,13 +22,16 @@ export default function MyRepoModal() {
   const [selectedFramework, setSelectedFramework] = useState("");
   const [secretVariables, setSecretVariables] = useState([]);
   const [port, setPort] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [autoScaling, setAutoScaling] = useState({
     minReplicas: "",
     maxReplicas: "",
   });
   const [autoScailingEnabled, setAutoScailingEnabled] = useState(false);
-  const [cpuPercentage, setCpuPercentage] = useState(80);
+  const [cpuThreshold, setCpuThreshold] = useState(80);
   const user = useAtomValue(userAtom);
+  const queryClient = useQueryClient();
+
   const { isLoading, data: repos } = useQuery(
     ["/repos", user.login], // 쿼리 키에 user.login을 추가하여 유저마다 캐시 관리
     () => fetchRepos({ login: user.login }), // 함수 참조 대신 익명 함수 사용하여 호출
@@ -35,24 +39,95 @@ export default function MyRepoModal() {
   const isBackend = backendList.includes(selectedFramework);
 
   const handleOnPortChange = (e) => {
-    setPort(e.target.value);
+    setPort(e.target.value === "" ? "" : Number(e.target.value));
   };
 
   const handleOnautoScalingEnabled = (e) => {
     setAutoScailingEnabled(e.target.checked);
     if (!e.target.checked) {
       setAutoScaling({ minReplicas: "", maxReplicas: "" });
+      setCpuThreshold(80);
     }
   };
 
   const handleOnAutoScalingChange = (e) => {
     const { name, value } = e.target;
-    setAutoScaling((prev) => ({ ...prev, [name]: value }));
+    setAutoScaling((prev) => ({
+      ...prev,
+      [name]: value === "" ? "" : Number(value),
+    }));
   };
 
   const handleOnCpuPercentageChange = (e) => {
-    setCpuPercentage(e.target.value);
+    setCpuThreshold(e.target.value === "" ? "" : Number(e.target.value));
   };
+
+  const handleOnCreateProject = async () => {
+    if (!selectedFramework) {
+      alert("언어/프레임워크를 선택해주세요.");
+      return;
+    }
+
+    if (isBackend && !port) {
+      alert("포트를 입력해주세요.");
+      return;
+    }
+
+    if (autoScailingEnabled) {
+      if (!autoScaling.minReplicas || !autoScaling.maxReplicas) {
+        alert("최소 Pod와 최대 Pod 수를 입력해주세요.");
+        return;
+      }
+      if (autoScaling.minReplicas > autoScaling.maxReplicas) {
+        alert("최소 Pod 수는 최대 Pod 수보다 작아야합니다.");
+        return;
+      }
+      if (autoScaling.minReplicas < 1 || autoScaling.minReplicas > 10) {
+        alert("최소 Pod 수는 1 ~ 10 사이여야합니다.");
+        return;
+      }
+      if (autoScaling.maxReplicas < 1 || autoScaling.maxReplicas > 10) {
+        alert("최대 Pod 수는 1 ~ 10 사이여야합니다.");
+        return;
+      }
+      if (!cpuThreshold) {
+        alert("CPU 사용량 임계치를 입력해주세요.");
+        return;
+      }
+      if (cpuThreshold < 1 || cpuThreshold > 100) {
+        alert("CPU 사용량 임계치는 1 ~ 100 사이여야합니다.");
+        return;
+      }
+    }
+    try {
+      const data = {
+        name: selectedRepo,
+        framework: selectedFramework,
+        secrets: secretVariables,
+        port,
+        autoScaling: autoScailingEnabled,
+        minReplicas: autoScaling.minReplicas,
+        maxReplicas: autoScaling.maxReplicas,
+        cpuThreshold,
+      };
+      setIsSubmitting(true);
+      await createProject(data);
+      closeModal();
+      queryClient.invalidateQueries(["/projects", user.login]);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  useEffect(() => {
+    setSecretVariables([]); // 선택한 프레임워크가 변경될 때마다 secretVariables 초기화
+    setPort("");
+    setAutoScailingEnabled(false); // 선택한 프레임워크가 변경될 때마다 autoScaling 초기화
+    setAutoScaling({ minReplicas: "", maxReplicas: "" });
+    setCpuThreshold(80);
+  }, [selectedFramework]);
 
   return (
     <div className=" fixed top-0 left-0 w-screen h-screen bg-[rgba(31,41,55,0.2)] flex justify-center items-center z-10">
@@ -90,7 +165,7 @@ export default function MyRepoModal() {
             />
           )}
           {selectedRepo ? (
-            <div className=" mt-16 flex flex-col gap-10 mb-20">
+            <div className=" mt-16 flex flex-col gap-10 mb-10">
               <div>
                 <div className=" text-sm mb-1">프로젝트 이름</div>
                 <div className=" w-full h-[40px] border pl-3 text-zinc-500 flex items-center bg-zinc-50">
@@ -130,7 +205,7 @@ export default function MyRepoModal() {
                     />
                   </div>
                   <label
-                    className=" relative cursor-pointer flex gap-2 items-center"
+                    className=" relative cursor-pointer flex gap-2 items-center w-fit"
                     htmlFor="autoScailingEnabled"
                   >
                     <input
@@ -138,7 +213,7 @@ export default function MyRepoModal() {
                       className=" w-5 h-5 cursor-pointer"
                       type="checkbox"
                       onChange={handleOnautoScalingEnabled}
-                      value={autoScailingEnabled}
+                      checked={autoScailingEnabled}
                     />
                     {!autoScailingEnabled && (
                       <FaCheck
@@ -187,7 +262,7 @@ export default function MyRepoModal() {
                           max={100}
                           className="w-full border h-[40px] p-4"
                           placeholder="Default: 80"
-                          value={cpuPercentage}
+                          value={cpuThreshold}
                           onChange={handleOnCpuPercentageChange}
                         />
                       </div>
@@ -195,9 +270,18 @@ export default function MyRepoModal() {
                   )}
                 </>
               )}
-              <button className=" w-full h-[40px] bg-blue-500 text-white rounded-lg mt-10">
-                배포하기
-              </button>
+              {isSubmitting ? (
+                <div className=" flex justify-center items-center">
+                  <CircularProgress size={25} />
+                </div>
+              ) : (
+                <button
+                  className=" w-full h-[40px] bg-blue-500 text-white rounded-lg mt-10"
+                  onClick={handleOnCreateProject}
+                >
+                  프로젝트 생성하기
+                </button>
+              )}
             </div>
           ) : (
             <div className=" mt-16 text-center text-zinc-500">
