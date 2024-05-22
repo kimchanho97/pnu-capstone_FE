@@ -25,3 +25,9 @@ export const getProjectStatus = async (id) => {
   const response = await instance.get(`/project/status/${id}`);
   return response.data;
 };
+
+export const fetchProjectDetail = async (id) => {
+  // 쿼리 키: ["/project", project.id]
+  const response = await instance.get(`/project/${id}`);
+  return response.data;
+};
