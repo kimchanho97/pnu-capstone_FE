@@ -10,3 +10,18 @@ export const fetchProjects = async () => {
   const response = await instance.get("/project/");
   return response.data;
 };
+
+export const deleteProject = async (id) => {
+  const response = await instance.delete(`/project/${id}`);
+  return response.data;
+};
+
+export const buildProject = async (id) => {
+  const response = await instance.post(`/project/build`, { id });
+  return response.data;
+};
+
+export const getProjectStatus = async (id) => {
+  const response = await instance.get(`/project/status/${id}`);
+  return response.data;
+};
