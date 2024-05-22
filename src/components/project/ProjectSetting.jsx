@@ -2,9 +2,18 @@ import { useAtomValue } from "jotai";
 import React from "react";
 import { MdOutlineArrowDropDownCircle } from "react-icons/md";
 import { userAtom } from "../../store";
+import { deleteProject } from "../../apis/project";
 
 export default function ProjectSetting({ project, secrets }) {
   const user = useAtomValue(userAtom);
+  const handleDeleteProject = async () => {
+    try {
+      await deleteProject(project.id);
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className=" flex flex-col gap-12">
@@ -57,7 +66,10 @@ export default function ProjectSetting({ project, secrets }) {
           <div className=" text-sm text-zinc-500">
             프로젝트를 삭제하면 모든 데이터가 삭제됩니다.
           </div>
-          <button className=" bg-red-500 text-white px-5 py-[6px] rounded-md mt-5">
+          <button
+            className=" bg-red-500 text-white px-5 py-[6px] rounded-md mt-5"
+            onClick={handleDeleteProject}
+          >
             프로젝트 삭제
           </button>
         </div>
