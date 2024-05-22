@@ -31,6 +31,7 @@ export default function MyRepoModal() {
   const [cpuThreshold, setCpuThreshold] = useState(80);
   const user = useAtomValue(userAtom);
   const queryClient = useQueryClient();
+  const [errorMessage, setErrorMessage] = useState("");
 
   const { isLoading, data: repos } = useQuery(
     ["/repos", user.login], // 쿼리 키에 user.login을 추가하여 유저마다 캐시 관리
@@ -63,39 +64,44 @@ export default function MyRepoModal() {
   };
 
   const handleOnCreateProject = async () => {
+    if (errorMessage) {
+      setErrorMessage("");
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+
     if (!selectedFramework) {
-      alert("언어/프레임워크를 선택해주세요.");
+      setErrorMessage("언어/프레임워크를 선택해주세요.");
       return;
     }
 
     if (isBackend && !port) {
-      alert("포트를 입력해주세요.");
+      setErrorMessage("포트를 입력해주세요.");
       return;
     }
 
     if (autoScailingEnabled) {
       if (!autoScaling.minReplicas || !autoScaling.maxReplicas) {
-        alert("최소 Pod와 최대 Pod 수를 입력해주세요.");
+        setErrorMessage("최소 Pod와 최대 Pod 수를 입력해주세요.");
         return;
       }
       if (autoScaling.minReplicas > autoScaling.maxReplicas) {
-        alert("최소 Pod 수는 최대 Pod 수보다 작아야합니다.");
+        setErrorMessage("최소 Pod 수는 최대 Pod 수보다 작아야합니다.");
         return;
       }
       if (autoScaling.minReplicas < 1 || autoScaling.minReplicas > 10) {
-        alert("최소 Pod 수는 1 ~ 10 사이여야합니다.");
+        setErrorMessage("최소 Pod 수는 1 ~ 10 사이여야합니다.");
         return;
       }
       if (autoScaling.maxReplicas < 1 || autoScaling.maxReplicas > 10) {
-        alert("최대 Pod 수는 1 ~ 10 사이여야합니다.");
+        setErrorMessage("최대 Pod 수는 1 ~ 10 사이여야합니다.");
         return;
       }
       if (!cpuThreshold) {
-        alert("CPU 사용량 임계치를 입력해주세요.");
+        setErrorMessage("CPU 사용량 임계치를 입력해주세요.");
         return;
       }
       if (cpuThreshold < 1 || cpuThreshold > 100) {
-        alert("CPU 사용량 임계치는 1 ~ 100 사이여야합니다.");
+        setErrorMessage("CPU 사용량 임계치는 1 ~ 100 사이여야합니다.");
         return;
       }
     }
@@ -127,7 +133,11 @@ export default function MyRepoModal() {
     setAutoScailingEnabled(false); // 선택한 프레임워크가 변경될 때마다 autoScaling 초기화
     setAutoScaling({ minReplicas: "", maxReplicas: "" });
     setCpuThreshold(80);
-  }, [selectedFramework]);
+    setErrorMessage("");
+  }, [selectedFramework, selectedRepo]);
+  useEffect(() => {
+    setSelectedFramework("");
+  }, [selectedRepo]);
 
   return (
     <div className=" fixed top-0 left-0 w-screen h-screen bg-[rgba(31,41,55,0.2)] flex justify-center items-center z-10">
@@ -275,12 +285,22 @@ export default function MyRepoModal() {
                   <CircularProgress size={25} />
                 </div>
               ) : (
-                <button
-                  className=" w-full h-[40px] bg-blue-500 text-white rounded-lg mt-10"
-                  onClick={handleOnCreateProject}
-                >
-                  프로젝트 생성하기
-                </button>
+                <div className=" mt-5 flex flex-col gap-1 ">
+                  {errorMessage && (
+                    <input
+                      type="text"
+                      value={errorMessage}
+                      readOnly
+                      className="text-red-500 text-sm px-2 font-semibold"
+                    />
+                  )}
+                  <button
+                    className=" w-full h-[40px] bg-blue-500 text-white rounded-lg"
+                    onClick={handleOnCreateProject}
+                  >
+                    프로젝트 생성하기
+                  </button>
+                </div>
               )}
             </div>
           ) : (
