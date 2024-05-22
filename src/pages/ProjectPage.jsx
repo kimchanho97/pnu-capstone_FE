@@ -28,7 +28,7 @@ export default function ProjectPage() {
 
   useEffect(() => {
     if (data) {
-      console.log("ProjectPage: ", data);
+      // console.log("ProjectPage: ", data);
       setProjects(data);
     }
   }, [data, setProjects]);

@@ -1,56 +1,27 @@
 import React, { useState } from "react";
 import { IoChevronBackOutline } from "react-icons/io5";
+import { useQuery } from "react-query";
+import { fetchProjectDetail } from "../../apis/project";
 import ConnectionInfo from "./ConnectionInfo";
 import DeploymentHistory from "./DeploymentHistory";
 import ProjectDetailMenu from "./ProjectDetailMenu";
 import ProjectItem from "./ProjectItem";
 import ProjectSetting from "./ProjectSetting";
-
-const projectDetail = {
-  builds: [
-    {
-      id: 1,
-      buildDate: "2021-09-01 12:00:00",
-      commitMsg: "Initial commit",
-      imageName: "iserser23423/capstone-frontend",
-      imageTag: "latest",
-    },
-    {
-      id: 2,
-      buildDate: "2021-09-02 12:00:00",
-      commitMsg: "Add README.md",
-      imageName: "iserser23423/capstone-frontend",
-      imageTag: "latest",
-    },
-  ],
-  deployments: [
-    {
-      id: 1,
-      deployDate: "2021-09-01 12:00:00",
-      commitMsg: "Initial deploy",
-    },
-    {
-      id: 2,
-      deployDate: "2021-09-02 12:00:00",
-      commitMsg: "Add README.md",
-    },
-  ],
-  domainUrl: "https://capstone-frontend.com",
-  webhookUrl: "https://webhook.capstone-frontend.com",
-  secrets: [
-    {
-      key: "SECRET_KEY",
-      value: "SECRET_VALUE",
-    },
-    {
-      key: "ANOTHER_KEY",
-      value: "ANOTHER_VALUE",
-    },
-  ],
-};
+import { CircularProgress } from "@mui/material";
 
 export default function ProjectDetail({ project, setSelectedProject }) {
   const [selectedDetailOption, setSelectedDetailOption] = useState("배포 내역");
+  const { isLoading, data: projectDetail } = useQuery(
+    ["/project", project.id],
+    () => fetchProjectDetail(project.id),
+  );
+
+  if (isLoading)
+    return (
+      <div className=" flex mt-5 w-full justify-center">
+        <CircularProgress size={20} />
+      </div>
+    );
 
   return (
     <div className=" flex flex-col w-full">
@@ -73,7 +44,7 @@ export default function ProjectDetail({ project, setSelectedProject }) {
         <DeploymentHistory
           project={project}
           builds={projectDetail.builds}
-          deployments={projectDetail.deployments}
+          deploys={projectDetail.deploys}
         />
       ) : selectedDetailOption === "연결 정보" ? (
         <ConnectionInfo
