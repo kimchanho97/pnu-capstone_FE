@@ -24,7 +24,7 @@ export default function ConnectionInfo({ webhookUrl, domainUrl }) {
             </button>
           </div>
           <button
-            className=" bg-blue-200 rounded-md px-3 py-2 text-xs hover:bg-blue-300"
+            className=" bg-zinc-200 rounded-md px-3 py-2 text-xs hover:bg-blue-200"
             onClick={linkDomainUrl}
           >
             접속하기
