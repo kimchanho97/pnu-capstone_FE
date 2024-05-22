@@ -1,10 +1,22 @@
 import cn from "classnames";
-import { useAtomValue } from "jotai";
-import React from "react";
+import { useAtomValue, useSetAtom } from "jotai";
+import React, { useState } from "react";
 import { IoTerminal } from "react-icons/io5";
+import { buildProject, getProjectStatus } from "../../apis/project";
 import { ReactComponent as GithubIcon } from "../../assets/github.svg";
-import { userAtom } from "../../store";
+import useModal from "../../hooks/useModal";
+import { projectAtom, userAtom } from "../../store";
 import { backendList, icons } from "../../utils/constant";
+
+const statusMessageMap = {
+  0: "빌드 전",
+  1: "빌드 중",
+  2: "빌드 완료",
+  3: "배포 중",
+  4: "배포 완료",
+  5: "빌드 실패",
+  6: "배포 실패",
+};
 
 export default function ProjectItem({
   project,
@@ -12,10 +24,66 @@ export default function ProjectItem({
   className,
 }) {
   const ProjectIconComponent = icons[project?.framework];
+  const setProjects = useSetAtom(projectAtom);
   const subtitle = backendList.includes(project.framework) ? "server" : "web";
   const user = useAtomValue(userAtom);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const openGithubLink = () => {
     window.open(`https://github.com/${user.login}/${project.name}`, "_blank");
+  };
+  const { openModal } = useModal();
+  const isBuildable = [0, 2, 4, 5, 6].includes(project.status);
+  const isDeployable = project.status === 2 || project.status === 6;
+
+  const checkBuildStatus = () => {
+    const intervalId = setInterval(async () => {
+      try {
+        const response = await getProjectStatus(project.id);
+        // 상태 업데이트
+        setProjects((prev) =>
+          prev.map((item) =>
+            item.id === project.id
+              ? { ...item, status: response.status }
+              : item,
+          ),
+        );
+        // status 2: 빌드 완료, status 5: 빌드 실패
+        if (response.status === 2 || response.status === 5) {
+          clearInterval(intervalId);
+          setIsSubmitting(false);
+        }
+      } catch (error) {
+        clearInterval(intervalId);
+        setIsSubmitting(false);
+        console.error(error);
+      }
+    }, 5000);
+  };
+
+  const handleBuildProject = async () => {
+    try {
+      setIsSubmitting(true);
+      await buildProject(project.id);
+      // 바로 빌드 중 상태로 변경
+      const response = await getProjectStatus(project.id);
+      setProjects((prev) =>
+        prev.map((item) =>
+          item.id === project.id ? { ...item, status: response.status } : item,
+        ),
+      );
+      checkBuildStatus();
+    } catch (error) {
+      const { status } = error.response.data?.error;
+      if (status === 4001) {
+        openModal({
+          modalType: "MessageModal",
+          props: {
+            message: "이미 동일한 시점의 빌드 내역이 존재합니다.",
+          },
+        });
+      }
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -46,11 +114,12 @@ export default function ProjectItem({
           <div className=" flex gap-1">
             <div
               className={cn("rounded-full w-4 h-4 relative", {
-                "bg-red-200": project.status === 0,
-                "bg-amber-200":
-                  project.status === 1 ||
-                  project.status === 2 ||
-                  project.status === 3,
+                "bg-red-200":
+                  project.status === 0 ||
+                  project.status === 5 ||
+                  project.status === 6,
+                "bg-amber-200": project.status === 1 || project.status === 3,
+                "bg-blue-200": project.status === 2,
                 "bg-green-200": project.status === 4,
               })}
             >
@@ -58,64 +127,50 @@ export default function ProjectItem({
                 className={cn(
                   "absolute rounded-full w-2 h-2 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
                   {
-                    "bg-red-500": project.status === 0,
+                    "bg-red-500":
+                      project.status === 0 ||
+                      project.status === 5 ||
+                      project.status === 6,
                     "bg-amber-500":
-                      project.status === 1 ||
-                      project.status === 2 ||
-                      project.status === 3,
+                      project.status === 1 || project.status === 3,
+                    "bg-blue-500": project.status === 2,
                     "bg-green-500": project.status === 4,
                   },
                 )}
               />
             </div>
             <span
-              className={cn(
-                "text-xs",
-                { "text-red-500": project.status === 0 },
-                {
-                  "text-amber-500":
-                    project.status === 1 ||
-                    project.status === 2 ||
-                    project.status === 3,
-                },
-                {
-                  "text-green-600": project.status === 4,
-                },
-              )}
+              className={cn("text-xs", {
+                "text-red-500":
+                  project.status === 0 ||
+                  project.status === 5 ||
+                  project.status === 6,
+                "text-amber-500": project.status === 1 || project.status === 3,
+                "text-blue-500": project.status === 2,
+                "text-green-600": project.status === 4,
+              })}
             >
-              {(project.status === 0 && "빌드 전") ||
-                (project.status === 1 && "빌드 중") ||
-                (project.status === 2 && "빌드 완료") ||
-                (project.status === 3 && "배포 중") ||
-                (project.status === 4 && "배포 완료")}
+              {statusMessageMap[project.status]}
             </span>
           </div>
         </div>
         <div className=" flex gap-1">
           <button
-            className={cn(
-              " rounded-md px-3 py-2 text-xs",
-              (project.status === 0 ||
-                project.status === 2 ||
-                project.status === 4) &&
-                "bg-blue-200 hover:bg-blue-300",
-              {
-                "text-zinc-500 bg-zinc-200":
-                  project.status === 1 || project.status === 3,
-              },
-            )}
-            disabled={project.status === 1 || project.status === 3}
+            className={cn(" rounded-md px-3 py-2 text-xs", {
+              "bg-blue-200 hover:bg-blue-300": isBuildable,
+              "text-zinc-500 bg-zinc-200": !isBuildable,
+            })}
+            disabled={isSubmitting || !isBuildable}
+            onClick={handleBuildProject}
           >
             빌드하기
           </button>
           <button
-            className={cn(
-              " rounded-md px-3 py-2 text-xs ",
-              { "bg-zinc-200 text-zinc-500 ": project.status !== 2 },
-              project.status === 2 &&
-                " text-black bg-blue-200 hover:bg-blue-300",
-            )}
-            disabled={project.status !== 2}
+            className={cn(" rounded-md px-3 py-2 text-xs ", {
+              " text-black bg-blue-200 hover:bg-blue-300": isDeployable,
+              "bg-zinc-200 text-zinc-500 ": !isDeployable,
+            })}
+            disabled={isSubmitting || !isDeployable}
           >
             배포하기
           </button>
