@@ -1,18 +1,19 @@
-import { useAtomValue } from "jotai";
+import { CircularProgress } from "@mui/material";
+import { useAtom, useAtomValue } from "jotai";
 import React, { useEffect } from "react";
 import { useQuery } from "react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 import { fetchProjects } from "../apis/project";
 import MainSection from "../components/project/MainSection";
 import SideSection from "../components/project/SideSection";
-import { userAtom } from "../store";
-import { CircularProgress } from "@mui/material";
+import { projectAtom, userAtom } from "../store";
 
 export default function ProjectPage() {
   const user = useAtomValue(userAtom);
+  const [projects, setProjects] = useAtom(projectAtom);
   const location = useLocation();
   const navigate = useNavigate();
-  const { isLoading, data: projects } = useQuery(
+  const { isLoading, data } = useQuery(
     ["/projects", user.login],
     fetchProjects,
   );
@@ -25,7 +26,14 @@ export default function ProjectPage() {
     }
   }, [location.pathname, navigate, user.login]);
 
-  if (isLoading) {
+  useEffect(() => {
+    if (data) {
+      console.log("ProjectPage: ", data);
+      setProjects(data);
+    }
+  }, [data, setProjects]);
+
+  if (isLoading || !projects) {
     return (
       <div className=" flex justify-center mt-10">
         <CircularProgress size={20} />

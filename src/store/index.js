@@ -22,3 +22,5 @@ export const modalAtom = atomWithStorage(
   },
   storage,
 );
+
+export const projectAtom = atomWithStorage("projects", [], storage);
