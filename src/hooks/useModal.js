@@ -2,6 +2,7 @@ import { useAtom } from "jotai";
 import MyRepoModal from "../components/project/MyRepoModal";
 import SelectRepoModal from "../components/project/SelectRepoModal";
 import TemplateModal from "../components/project/TemplateModal";
+import MessageModal from "../components/common/MessageModal";
 import { modalAtom } from "../store";
 
 export default function useModal() {
@@ -11,6 +12,7 @@ export default function useModal() {
     SelectRepoModal: <SelectRepoModal />,
     MyRepoModal: <MyRepoModal />,
     TemplateModal: <TemplateModal />,
+    MessageModal: <MessageModal />,
   };
 
   const closeModal = () => {
