@@ -9,13 +9,7 @@ import {
 import { ReactComponent as GithubIcon } from "../../assets/github.svg";
 import { userAtom } from "../../store";
 
-export default function DeploymentHistory({
-  deploys,
-  builds,
-  project,
-  buildId,
-  deployId,
-}) {
+export default function DeploymentHistory({ deploys, builds, project }) {
   const user = useAtomValue(userAtom);
   const linkGithubRepo = () => {
     window.open(`
@@ -39,7 +33,7 @@ export default function DeploymentHistory({
             >
               <div className=" flex items-center gap-4">
                 <div className=" text-green-700 pr-3">
-                  {id === deployId ? (
+                  {id === project.currentDeployId ? (
                     <FaCheckCircle size={20} />
                   ) : (
                     <MdOutlineRadioButtonUnchecked size={20} />
@@ -93,7 +87,7 @@ export default function DeploymentHistory({
             >
               <div className=" flex items-center gap-4">
                 <div className=" text-green-700 pr-3">
-                  {id === buildId ? (
+                  {id === project.currentBuildId ? (
                     <FaCheckCircle size={20} />
                   ) : (
                     <MdOutlineRadioButtonUnchecked size={20} />

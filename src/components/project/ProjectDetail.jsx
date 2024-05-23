@@ -87,8 +87,6 @@ export default function ProjectDetail({ project, setSelectedProject }) {
       />
       {selectedDetailOption === "배포 내역" ? (
         <DeploymentHistory
-          buildId={projectDetail.buildId}
-          deployId={projectDetail.deployId}
           project={project}
           builds={projectDetail.builds}
           deploys={projectDetail.deploys}
