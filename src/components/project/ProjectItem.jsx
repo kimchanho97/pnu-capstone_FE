@@ -1,11 +1,11 @@
 import cn from "classnames";
-import { useAtomValue, useSetAtom } from "jotai";
-import React, { useState } from "react";
+import { useAtomValue } from "jotai";
+import React, { useEffect, useState } from "react";
 import { IoTerminal } from "react-icons/io5";
-import { buildProject, getProjectStatus } from "../../apis/project";
+import { buildProject } from "../../apis/project";
 import { ReactComponent as GithubIcon } from "../../assets/github.svg";
 import useModal from "../../hooks/useModal";
-import { projectAtom, userAtom } from "../../store";
+import { userAtom } from "../../store";
 import { backendList, icons } from "../../utils/constant";
 
 const statusMessageMap = {
@@ -24,54 +24,22 @@ export default function ProjectItem({
   className,
 }) {
   const ProjectIconComponent = icons[project?.framework];
-  const setProjects = useSetAtom(projectAtom);
   const subtitle = backendList.includes(project.framework) ? "server" : "web";
   const user = useAtomValue(userAtom);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const openGithubLink = () => {
-    window.open(`https://github.com/${user.login}/${project.name}`, "_blank");
-  };
   const { openModal } = useModal();
   const isBuildable = [0, 2, 4, 5, 6].includes(project.status);
   const isDeployable = project.status === 2 || project.status === 6;
 
-  const checkBuildStatus = () => {
-    const intervalId = setInterval(async () => {
-      try {
-        const response = await getProjectStatus(project.id);
-        // 상태 업데이트
-        setProjects((prev) =>
-          prev.map((item) =>
-            item.id === project.id
-              ? { ...item, status: response.status }
-              : item,
-          ),
-        );
-        // status 2: 빌드 완료, status 5: 빌드 실패
-        if (response.status === 2 || response.status === 5) {
-          clearInterval(intervalId);
-          setIsSubmitting(false);
-        }
-      } catch (error) {
-        clearInterval(intervalId);
-        setIsSubmitting(false);
-        console.error(error);
-      }
-    }, 5000);
+  const openGithubLink = () => {
+    window.open(`https://github.com/${user.login}/${project.name}`, "_blank");
   };
 
   const handleBuildProject = async () => {
     try {
       setIsSubmitting(true);
-      await buildProject(project.id);
-      // 바로 빌드 중 상태로 변경
-      const response = await getProjectStatus(project.id);
-      setProjects((prev) =>
-        prev.map((item) =>
-          item.id === project.id ? { ...item, status: response.status } : item,
-        ),
-      );
-      checkBuildStatus();
+      const response = await buildProject(project.id);
+      console.log(response);
     } catch (error) {
       const { status } = error.response.data?.error;
       if (status === 4001) {
@@ -85,6 +53,35 @@ export default function ProjectItem({
       setIsSubmitting(false);
     }
   };
+
+  const handleDeployProject = async () => {
+    try {
+      setIsSubmitting(true);
+      await buildProject(project.id);
+    } catch (error) {
+      const { status } = error.response.data?.error;
+      if (status === 4001) {
+        openModal({
+          modalType: "MessageModal",
+          props: {
+            message: "이미 동일한 시점의 배포 내역이 존재합니다.",
+          },
+        });
+      }
+      setIsSubmitting(false);
+    }
+  };
+
+  useEffect(() => {
+    if (
+      project.status === 2 ||
+      project.status === 4 ||
+      project.status === 5 ||
+      project.status === 6
+    ) {
+      setIsSubmitting(false);
+    }
+  }, [project.status]);
 
   return (
     <div className={cn("flex flex-col justify-between bg-white", className)}>
@@ -171,6 +168,7 @@ export default function ProjectItem({
               "bg-zinc-200 text-zinc-500 ": !isDeployable,
             })}
             disabled={isSubmitting || !isDeployable}
+            onClick={handleDeployProject}
           >
             배포하기
           </button>
