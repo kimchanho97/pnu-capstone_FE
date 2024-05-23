@@ -1,18 +1,33 @@
 import cn from "classnames";
-import React, { useState } from "react";
+import { useAtomValue } from "jotai";
+import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { GoGitBranch } from "react-icons/go";
 import useModal from "../../hooks/useModal";
+import { projectAtom } from "../../store";
 import MainMenu from "./MainMenu";
 import ProjectDetail from "./ProjectDetail";
 import ProjectItem from "./ProjectItem";
 
-export default function MainSection({ projects }) {
+export default function MainSection() {
   const { openModal } = useModal();
   const [selectedProject, setSelectedProject] = useState(false);
+  const projects = useAtomValue(projectAtom);
+
   const openSelectRepoModal = () => {
     openModal({ modalType: "SelectRepoModal" });
   };
+
+  useEffect(() => {
+    if (selectedProject) {
+      const updatedProject = projects.find(
+        (project) => project.id === selectedProject.id,
+      );
+      if (updatedProject) {
+        setSelectedProject(updatedProject);
+      }
+    }
+  }, [projects, selectedProject]);
 
   return (
     <div className=" h-full">
@@ -36,15 +51,11 @@ export default function MainSection({ projects }) {
             </div>
           </div>
           <div
-            className={cn(
-              {
-                " grid grid-cols-1 gap-7 mt-10 sm:grid-cols-2 md:grid-cols-3 overflow-y-auto":
-                  !selectedProject,
-              },
-              {
-                "mt-3 overflow-y-auto": selectedProject,
-              },
-            )}
+            className={cn({
+              " grid grid-cols-1 gap-7 mt-10 sm:grid-cols-2 md:grid-cols-3 overflow-y-auto":
+                !selectedProject,
+              "mt-3 overflow-y-auto": selectedProject,
+            })}
             style={{ maxHeight: `calc(100vh - 220px)` }}
           >
             {selectedProject ? (
