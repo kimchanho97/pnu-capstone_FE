@@ -33,6 +33,36 @@ export default function ProjectPage() {
     }
   }, [data, setProjects]);
 
+  useEffect(() => {
+    const eventSource = new EventSource(
+      `${process.env.REACT_APP_API_URL}/stream?channel=${user.id}`,
+    );
+
+    eventSource.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log("EventSource: ", data);
+      setProjects((prev) =>
+        prev.map((item) =>
+          item.id === data.projectId
+            ? {
+                ...item,
+                status: data.status,
+                currentDeployId: data.currentDeployId,
+                currentBuildId: data.currentBuildId,
+              }
+            : item,
+        ),
+      );
+    };
+
+    eventSource.onerror = (error) => {
+      console.error("EventSource error: ", error);
+    };
+    return () => {
+      eventSource.close();
+    };
+  }, [setProjects, user.id]);
+
   if (isLoading || !projects) {
     return (
       <div className=" flex justify-center mt-10">
@@ -43,8 +73,8 @@ export default function ProjectPage() {
 
   return (
     <div className="flex">
-      <SideSection projects={projects} />
-      <MainSection projects={projects} />
+      <SideSection />
+      <MainSection />
     </div>
   );
 }
