@@ -2,7 +2,7 @@ import cn from "classnames";
 import { useAtomValue } from "jotai";
 import React, { useEffect, useState } from "react";
 import { IoTerminal } from "react-icons/io5";
-import { buildProject } from "../../apis/project";
+import { buildProject, deployProject } from "../../apis/project";
 import { ReactComponent as GithubIcon } from "../../assets/github.svg";
 import useModal from "../../hooks/useModal";
 import { userAtom } from "../../store";
@@ -57,7 +57,8 @@ export default function ProjectItem({
   const handleDeployProject = async () => {
     try {
       setIsSubmitting(true);
-      await buildProject(project.id);
+      const response = await deployProject(project.currentBuildId);
+      console.log(response);
     } catch (error) {
       const { status } = error.response.data?.error;
       if (status === 4001) {

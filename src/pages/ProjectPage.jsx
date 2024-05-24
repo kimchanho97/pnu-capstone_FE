@@ -47,8 +47,12 @@ export default function ProjectPage() {
             ? {
                 ...item,
                 status: data.status,
-                currentDeployId: data.currentDeployId,
-                currentBuildId: data.currentBuildId,
+                currentDeployId: data.currentDeployId
+                  ? data.currentDeployId
+                  : item.currentDeployId,
+                currentBuildId: data.currentBuildId
+                  ? data.currentBuildId
+                  : item.currentBuildId,
               }
             : item,
         ),

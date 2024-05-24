@@ -1,12 +1,15 @@
 import cn from "classnames";
 import { useAtomValue } from "jotai";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import {
   MdOutlineArrowDropDownCircle,
   MdOutlineRadioButtonUnchecked,
 } from "react-icons/md";
+import { useQueryClient } from "react-query";
+import { deployProject } from "../../apis/project";
 import { ReactComponent as GithubIcon } from "../../assets/github.svg";
+import useModal from "../../hooks/useModal";
 import { userAtom } from "../../store";
 
 export default function DeploymentHistory({ deploys, builds, project }) {
@@ -16,7 +19,41 @@ export default function DeploymentHistory({ deploys, builds, project }) {
     https://github.com/${user.login}/${project.name}
     `);
   };
+  const { openModal } = useModal();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const isRollbackable = [2, 4, 5, 6].includes(project.status);
+  const queryClient = useQueryClient();
+
+  const handleDeployProject = async (buildId) => {
+    try {
+      setIsSubmitting(true);
+      const response = await deployProject(buildId);
+      console.log(response);
+    } catch (error) {
+      const { status } = error.response.data?.error;
+      if (status === 4001) {
+        openModal({
+          modalType: "MessageModal",
+          props: {
+            message: "이미 동일한 시점의 배포 내역이 존재합니다.",
+          },
+        });
+      }
+      setIsSubmitting(false);
+    }
+  };
+
+  useEffect(() => {
+    if (
+      project.status === 2 ||
+      project.status === 4 ||
+      project.status === 5 ||
+      project.status === 6
+    ) {
+      setIsSubmitting(false);
+      queryClient.invalidateQueries(["/project", project.id]);
+    }
+  }, [project.status, queryClient, project.id]);
 
   return (
     <div>
@@ -26,7 +63,7 @@ export default function DeploymentHistory({ deploys, builds, project }) {
           <span>배포 내역</span>
         </div>
         <div className=" flex flex-col gap-2">
-          {deploys.map(({ id, deployDate, commitMsg, imageTag }) => (
+          {deploys.map(({ id, buildId, deployDate, commitMsg, imageTag }) => (
             <div
               key={id}
               className=" w-full bg-white p-5 flex gap-3 items-center justify-between"
@@ -66,7 +103,8 @@ export default function DeploymentHistory({ deploys, builds, project }) {
                 className={cn(" bg-zinc-200 rounded-md px-3 py-2 text-xs", {
                   "hover:bg-blue-200": isRollbackable,
                 })}
-                disabled={!isRollbackable}
+                disabled={!isRollbackable || isSubmitting}
+                onClick={() => handleDeployProject(buildId)}
               >
                 롤백하기
               </button>
@@ -120,7 +158,8 @@ export default function DeploymentHistory({ deploys, builds, project }) {
                 className={cn(" bg-zinc-200 rounded-md px-3 py-2 text-xs", {
                   "hover:bg-blue-200": isRollbackable,
                 })}
-                disabled={!isRollbackable}
+                disabled={!isRollbackable || isSubmitting}
+                onClick={() => handleDeployProject(id)}
               >
                 배포하기
               </button>
