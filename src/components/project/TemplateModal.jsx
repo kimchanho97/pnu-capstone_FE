@@ -5,7 +5,8 @@ import React, { useState } from "react";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
 import { IoIosCloseCircleOutline } from "react-icons/io";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
+import { createProject } from "../../apis/project";
 import { fetchRepos } from "../../apis/user";
 import { ReactComponent as GithubIcon } from "../../assets/github.svg";
 import useModal from "../../hooks/useModal";
@@ -21,6 +22,8 @@ export default function TemplateModal() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isRepoListOpen, setIsRepoListOpen] = useState(false);
   const [isPrivate, setIsPrivate] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const queryClient = useQueryClient();
 
   const { data: repos } = useQuery(
     ["/repos", user.login], // 쿼리 키에 user.login을 추가하여 유저마다 캐시 관리
@@ -67,8 +70,25 @@ export default function TemplateModal() {
         config,
       );
       console.log("Repository created successfully:", response.data);
+
+      const projectData = {
+        name: repoName,
+        framework: modal?.props?.value,
+        secrets: [],
+        port: 8080,
+        autoScaling: false,
+        minReplicas: null,
+        maxReplicas: null,
+        cpuThreshold: 80,
+      };
+      await createProject(projectData);
+      closeModal();
+      queryClient.invalidateQueries(["/projects", user.login]);
     } catch (error) {
       console.error("Error creating repository:", error.response.data);
+      if (error.response.data?.errors) {
+        setErrorMessage("이미 존재하는 저장소 이름입니다.");
+      }
     }
     setIsSubmitting(false);
   };
@@ -172,12 +192,19 @@ export default function TemplateModal() {
               <CircularProgress size={25} />
             </div>
           ) : (
-            <button
-              className=" w-full h-[40px] bg-blue-500 text-white rounded-lg mt-8 mb-16"
-              onClick={handleCreateRepo}
-            >
-              저장소 생성하기
-            </button>
+            <div className=" mt-8">
+              {errorMessage && (
+                <div className=" px-2 py-1 text-red-500 text-sm">
+                  이미 존재하는 저장소 이름입니다.
+                </div>
+              )}
+              <button
+                className=" w-full h-[40px] bg-blue-500 text-white rounded-lg mb-16"
+                onClick={handleCreateRepo}
+              >
+                저장소 생성하기
+              </button>
+            </div>
           )}
         </div>
       </div>
