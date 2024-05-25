@@ -12,6 +12,11 @@ export const fetchProjectDetail = async (id) => {
   return response.data;
 };
 
+export const deleteProject = async (id) => {
+  const response = await instance.delete(`/project/${id}`);
+  return response.data;
+};
+
 export const createProject = async (data) => {
   const response = await instance.post("/project/create", data);
   return response.data;
@@ -24,10 +29,5 @@ export const buildProject = async (id) => {
 
 export const deployProject = async (id) => {
   const response = await instance.post(`/project/deploy`, { id });
-  return response.data;
-};
-
-export const deleteProject = async (id) => {
-  const response = await instance.delete(`/project/${id}`);
   return response.data;
 };
