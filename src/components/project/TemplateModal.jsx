@@ -110,7 +110,7 @@ export default function TemplateModal() {
 
     try {
       const response = await axios.post(
-        `https://api.github.com/repos/kimchanho97/react/generate`,
+        `https://api.github.com/repos/PNU-Capstone-4/${modal?.props?.value}/generate`,
         data,
         config,
       );

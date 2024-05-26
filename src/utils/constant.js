@@ -5,13 +5,10 @@ import { ReactComponent as FastapiIcon } from "../assets/fastapi.svg";
 import { ReactComponent as FlaskIcon } from "../assets/flask.svg";
 import { ReactComponent as HtmlIcon } from "../assets/html.svg";
 import { ReactComponent as KotlinIcon } from "../assets/kotlin.svg";
-import { ReactComponent as MongodbIcon } from "../assets/mongodb.svg";
-import { ReactComponent as MysqlIcon } from "../assets/mysql.svg";
 import { ReactComponent as NestjsIcon } from "../assets/nestjs.svg";
 import { ReactComponent as NextjsIcon } from "../assets/nextjs.svg";
 import { ReactComponent as NginxIcon } from "../assets/nginx.svg";
 import { ReactComponent as NodejsIcon } from "../assets/nodejs.svg";
-import { ReactComponent as PostgresqlIcon } from "../assets/postgresql.svg";
 import { ReactComponent as ReactIcon } from "../assets/react.svg";
 import { ReactComponent as SpringIcon } from "../assets/spring.svg";
 import { ReactComponent as SvelteIcon } from "../assets/svelte.svg";
@@ -33,19 +30,6 @@ export const templateIcons = [
   { Icon: SpringIcon, subtitle: "server", title: "Spring", value: "spring" },
   { Icon: NginxIcon, subtitle: "server", title: "Nginx", value: "nginx" },
   { Icon: DockerIcon, subtitle: "docker", title: "Docker", value: "docker" },
-  { Icon: MysqlIcon, subtitle: "database", title: "MySQL", value: "mysql" },
-  {
-    Icon: MongodbIcon,
-    subtitle: "database",
-    title: "MongoDB",
-    value: "mongodb",
-  },
-  {
-    Icon: PostgresqlIcon,
-    subtitle: "database",
-    title: "PostgreSQL",
-    value: "postgresql",
-  },
 ];
 
 export const icons = {
@@ -64,9 +48,6 @@ export const icons = {
   spring: SpringIcon,
   nginx: NginxIcon,
   docker: DockerIcon,
-  mysql: MysqlIcon,
-  mongodb: MongodbIcon,
-  postgresql: PostgresqlIcon,
 };
 
 export const backendList = [

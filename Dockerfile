@@ -13,8 +13,8 @@ RUN npm install
 # 5. 애플리케이션 소스 코드 복사
 COPY . .
 
-ENV REACT_APP_API_URL=http://localhost:8080
-ENV REACT_APP_GITHUB_CLIENT_ID=2df6b7f1a7e5d586a2ee
+ENV REACT_APP_API_URL=https://backend.pitapat.ne.kr
+ENV REACT_APP_GITHUB_CLIENT_ID=Ov23liKMC4bcDxSdpNS2 
 
 # 6. React 애플리케이션 빌드
 RUN npm run build
