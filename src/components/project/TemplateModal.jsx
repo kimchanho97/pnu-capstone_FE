@@ -6,13 +6,12 @@ import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { useQuery, useQueryClient } from "react-query";
-import { createProject } from "../../apis/project";
+import { checkSubdomain, createProject } from "../../apis/project";
 import { fetchRepos } from "../../apis/user";
 import { ReactComponent as GithubIcon } from "../../assets/github.svg";
 import useModal from "../../hooks/useModal";
 import { modalAtom, userAtom } from "../../store";
-import { icons } from "../../utils/constant";
-import { checkSubdomain } from "../../apis/project";
+import { backendList, icons } from "../../utils/constant";
 
 export default function TemplateModal() {
   const { closeModal } = useModal();
@@ -27,6 +26,7 @@ export default function TemplateModal() {
   const queryClient = useQueryClient();
   const [subdomain, setSubdomain] = useState("");
   const [isUsableSubdomain, setIsUsableSubdomain] = useState(false);
+  const isBackend = backendList.includes(modal?.props?.value);
 
   const { data: repos } = useQuery(
     ["/repos", user.login], // 쿼리 키에 user.login을 추가하여 유저마다 캐시 관리
@@ -120,7 +120,7 @@ export default function TemplateModal() {
         name: repoName,
         framework: modal?.props?.value,
         secrets: [],
-        port: 8080,
+        port: isBackend ? 8000 : 80,
         autoScaling: false,
         minReplicas: null,
         maxReplicas: null,

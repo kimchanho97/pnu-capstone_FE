@@ -34,12 +34,12 @@ export default function MyRepoModal() {
   const [errorMessage, setErrorMessage] = useState("");
   const [subdomain, setSubdomain] = useState("");
   const [isUsableSubdomain, setIsUsableSubdomain] = useState(false);
+  const isBackend = backendList.includes(selectedFramework);
 
   const { isLoading, data: repos } = useQuery(
     ["/repos", user.login], // 쿼리 키에 user.login을 추가하여 유저마다 캐시 관리
     () => fetchRepos({ login: user.login }), // 함수 참조 대신 익명 함수 사용하여 호출
   );
-  const isBackend = backendList.includes(selectedFramework);
 
   const handleOnSubdomainChange = (e) => {
     setSubdomain(e.target.value);
@@ -144,7 +144,7 @@ export default function MyRepoModal() {
         name: selectedRepo,
         framework: selectedFramework,
         secrets: secretVariables,
-        port,
+        port: isBackend ? port : 80,
         autoScaling: autoScailingEnabled,
         minReplicas: autoScaling.minReplicas,
         maxReplicas: autoScaling.maxReplicas,
