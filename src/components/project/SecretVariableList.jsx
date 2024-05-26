@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CiCircleMinus, CiCirclePlus } from "react-icons/ci";
+import { FaMinus, FaPlus } from "react-icons/fa";
 
 export default function SecretVariableList({
   secretVariables,
@@ -49,7 +49,9 @@ export default function SecretVariableList({
           onChange={handleInputChange}
         />
         <button onClick={handleAddSecretVariable}>
-          <CiCirclePlus className=" w-[30px] h-[30px] text-blue-500" />
+          <div className=" w-[25px] h-[25px] rounded-full border-2 flex items-center justify-center border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white ">
+            <FaPlus size={10} />
+          </div>
         </button>
       </div>
       {secretVariables.length >= 1 && (
@@ -69,7 +71,9 @@ export default function SecretVariableList({
                 readOnly
               />
               <button onClick={() => handleRemoveSecretVariable(index)}>
-                <CiCircleMinus className=" w-[30px] h-[30px] text-red-300" />
+                <div className=" w-[25px] h-[25px] rounded-full border-2 flex items-center justify-center border-red-300 text-red-300 hover:bg-red-300 hover:text-white ">
+                  <FaMinus size={10} />
+                </div>
               </button>
             </div>
           ))}
