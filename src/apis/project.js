@@ -25,7 +25,9 @@ export const checkSubdomain = async (subdomain) => {
 };
 
 export const createProject = async (data) => {
-  const response = await instance.post("/project/create", data);
+  const response = await instance.post("/project/create", data, {
+    timeout: 10000,
+  });
   return response.data;
 };
 
