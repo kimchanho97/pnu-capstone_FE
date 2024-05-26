@@ -97,7 +97,11 @@ export default function ProjectDetail({ project, setSelectedProject }) {
           domainUrl={projectDetail.domainUrl}
         />
       ) : (
-        <ProjectSetting secrets={projectDetail.secrets} project={project} />
+        <ProjectSetting
+          secrets={projectDetail.secrets}
+          project={project}
+          subdomain={projectDetail.subdomain}
+        />
       )}
     </div>
   );

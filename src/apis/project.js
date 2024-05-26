@@ -17,6 +17,13 @@ export const deleteProject = async (id) => {
   return response.data;
 };
 
+export const checkSubdomain = async (subdomain) => {
+  const response = await instance.get(
+    `/project/subdomain/check?name=${subdomain}`,
+  );
+  return response.data;
+};
+
 export const createProject = async (data) => {
   const response = await instance.post("/project/create", data);
   return response.data;

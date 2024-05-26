@@ -4,7 +4,7 @@ import { MdOutlineArrowDropDownCircle } from "react-icons/md";
 import { userAtom } from "../../store";
 import { deleteProject } from "../../apis/project";
 
-export default function ProjectSetting({ project, secrets }) {
+export default function ProjectSetting({ project, secrets, subdomain }) {
   const user = useAtomValue(userAtom);
   const handleDeleteProject = async () => {
     try {
@@ -36,6 +36,10 @@ export default function ProjectSetting({ project, secrets }) {
           <div className=" border-t border-zinc-200 p-5 flex justify-between items-center text-sm">
             <div>브랜치</div>
             <div className=" font-semibold">main</div>
+          </div>
+          <div className=" border-t border-zinc-200 p-5 flex justify-between items-center text-sm">
+            <div>서브도메인</div>
+            <div className=" font-semibold">{subdomain}</div>
           </div>
         </div>
       </div>

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { FaCheck } from "react-icons/fa";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { useQuery, useQueryClient } from "react-query";
-import { createProject } from "../../apis/project";
+import { createProject, checkSubdomain } from "../../apis/project";
 import { fetchRepos } from "../../apis/user";
 import { ReactComponent as GithubIcon } from "../../assets/github.svg";
 import useModal from "../../hooks/useModal";
@@ -32,12 +32,38 @@ export default function MyRepoModal() {
   const user = useAtomValue(userAtom);
   const queryClient = useQueryClient();
   const [errorMessage, setErrorMessage] = useState("");
+  const [subdomain, setSubdomain] = useState("");
+  const [isUsableSubdomain, setIsUsableSubdomain] = useState(false);
 
   const { isLoading, data: repos } = useQuery(
     ["/repos", user.login], // 쿼리 키에 user.login을 추가하여 유저마다 캐시 관리
     () => fetchRepos({ login: user.login }), // 함수 참조 대신 익명 함수 사용하여 호출
   );
   const isBackend = backendList.includes(selectedFramework);
+
+  const handleOnSubdomainChange = (e) => {
+    setSubdomain(e.target.value);
+    if (e.target.value === "") setIsUsableSubdomain(false);
+  };
+
+  const handleOnSubdomainCheck = async () => {
+    if (!subdomain) {
+      setErrorMessage("SubDomain을 입력해주세요.");
+      return;
+    }
+
+    try {
+      const response = await checkSubdomain(subdomain);
+      console.log(response);
+      setIsUsableSubdomain(true);
+    } catch (error) {
+      console.error(error);
+      if (error.response.data?.error?.status === 4000) {
+        setErrorMessage("이미 사용중인 SubDomain입니다.");
+      }
+      setIsUsableSubdomain(false);
+    }
+  };
 
   const handleOnPortChange = (e) => {
     setPort(e.target.value === "" ? "" : Number(e.target.value));
@@ -78,6 +104,14 @@ export default function MyRepoModal() {
       setErrorMessage("포트를 입력해주세요.");
       return;
     }
+    if (!subdomain) {
+      setErrorMessage("SubDomain을 입력해주세요.");
+      return;
+    }
+    if (!isUsableSubdomain) {
+      setErrorMessage("SubDomain 중복 확인을 해주세요.");
+      return;
+    }
 
     if (autoScailingEnabled) {
       if (!autoScaling.minReplicas || !autoScaling.maxReplicas) {
@@ -115,6 +149,7 @@ export default function MyRepoModal() {
         minReplicas: autoScaling.minReplicas,
         maxReplicas: autoScaling.maxReplicas,
         cpuThreshold,
+        subdomain,
       };
       setIsSubmitting(true);
       await createProject(data);
@@ -130,11 +165,14 @@ export default function MyRepoModal() {
   useEffect(() => {
     setSecretVariables([]); // 선택한 프레임워크가 변경될 때마다 secretVariables 초기화
     setPort("");
+    setSubdomain("");
+    setIsUsableSubdomain(false);
     setAutoScailingEnabled(false); // 선택한 프레임워크가 변경될 때마다 autoScaling 초기화
     setAutoScaling({ minReplicas: "", maxReplicas: "" });
     setCpuThreshold(80);
     setErrorMessage("");
   }, [selectedFramework, selectedRepo]);
+
   useEffect(() => {
     setSelectedFramework("");
   }, [selectedRepo]);
@@ -201,6 +239,29 @@ export default function MyRepoModal() {
                   secretVariables={secretVariables}
                   setSecretVariables={setSecretVariables}
                 />
+              </div>
+              <div>
+                <div className=" text-sm mb-1">SubDomain</div>
+                <div className=" flex items-center gap-1">
+                  <input
+                    type="text"
+                    className="w-full border h-[40px] p-4"
+                    placeholder="사용하실 SubDomain을 입력해주세요."
+                    value={subdomain}
+                    onChange={handleOnSubdomainChange}
+                  />
+                  <button
+                    className=" text-xs border px-2 w-[80px] h-[40px] bg-zinc-200"
+                    onClick={handleOnSubdomainCheck}
+                  >
+                    중복 확인
+                  </button>
+                </div>
+                {isUsableSubdomain && subdomain && (
+                  <div className=" p-1 text-sm text-blue-500">
+                    사용가능한 SubDomain입니다.
+                  </div>
+                )}
               </div>
               {isBackend && (
                 <>

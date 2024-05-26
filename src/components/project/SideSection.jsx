@@ -8,7 +8,7 @@ export default function SideSection() {
   const projects = useAtomValue(projectAtom);
 
   return (
-    <div className=" w-[300px] bg-[#26282e] p-5 text-white h-screen">
+    <div className=" w-[300px] bg-[#26282e] p-5 text-white h-screen overflow-y-auto">
       <div className=" pt-3 flex justify-between">
         <img
           className=" w-14 h-14 rounded-full"

@@ -12,6 +12,7 @@ import { ReactComponent as GithubIcon } from "../../assets/github.svg";
 import useModal from "../../hooks/useModal";
 import { modalAtom, userAtom } from "../../store";
 import { icons } from "../../utils/constant";
+import { checkSubdomain } from "../../apis/project";
 
 export default function TemplateModal() {
   const { closeModal } = useModal();
@@ -24,11 +25,37 @@ export default function TemplateModal() {
   const [isPrivate, setIsPrivate] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const queryClient = useQueryClient();
+  const [subdomain, setSubdomain] = useState("");
+  const [isUsableSubdomain, setIsUsableSubdomain] = useState(false);
 
   const { data: repos } = useQuery(
     ["/repos", user.login], // 쿼리 키에 user.login을 추가하여 유저마다 캐시 관리
     () => fetchRepos({ login: user.login }), // 함수 참조 대신 익명 함수 사용하여 호출
   );
+
+  const handleOnSubdomainChange = (e) => {
+    setSubdomain(e.target.value);
+    if (e.target.value === "") setIsUsableSubdomain(false);
+  };
+
+  const handleOnSubdomainCheck = async () => {
+    if (!subdomain) {
+      setErrorMessage("SubDomain을 입력해주세요.");
+      return;
+    }
+
+    try {
+      const response = await checkSubdomain(subdomain);
+      console.log(response);
+      setIsUsableSubdomain(true);
+    } catch (error) {
+      console.error(error);
+      if (error.response.data?.error?.status === 4000) {
+        setErrorMessage("이미 사용중인 SubDomain입니다.");
+      }
+      setIsUsableSubdomain(false);
+    }
+  };
 
   const handleRepoListOpen = () => {
     setIsRepoListOpen((prev) => !prev);
@@ -49,9 +76,27 @@ export default function TemplateModal() {
   };
 
   const handleCreateRepo = async () => {
-    if (!repoName) return;
-    setIsSubmitting(true);
+    if (errorMessage) {
+      setErrorMessage("");
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
 
+    if (!repoName) {
+      setErrorMessage("저장소 이름을 입력해주세요.");
+      return;
+    }
+
+    if (!subdomain) {
+      setErrorMessage("SubDomain을 입력해주세요.");
+      return;
+    }
+
+    if (!isUsableSubdomain) {
+      setErrorMessage("SubDomain 중복 확인을 해주세요.");
+      return;
+    }
+
+    setIsSubmitting(true);
     const config = {
       headers: {
         Authorization: `token ${sessionStorage.getItem("accessToken")}`,
@@ -80,6 +125,7 @@ export default function TemplateModal() {
         minReplicas: null,
         maxReplicas: null,
         cpuThreshold: 80,
+        subdomain,
       };
       await createProject(projectData);
       closeModal();
@@ -168,6 +214,29 @@ export default function TemplateModal() {
               )}
             </div>
           </div>
+          <div>
+            <div className=" text-sm pl-2 mt-5">SubDomain</div>
+            <div className=" flex items-center gap-1  mt-1">
+              <input
+                type="text"
+                className="w-full border h-[40px] p-4"
+                placeholder="사용하실 SubDomain을 입력해주세요."
+                value={subdomain}
+                onChange={handleOnSubdomainChange}
+              />
+              <button
+                className=" text-xs border px-2 w-[80px] h-[40px] bg-zinc-200"
+                onClick={handleOnSubdomainCheck}
+              >
+                중복 확인
+              </button>
+            </div>
+            {isUsableSubdomain && subdomain && (
+              <div className=" p-1 text-sm text-blue-500">
+                사용가능한 SubDomain입니다.
+              </div>
+            )}
+          </div>
           <label
             className=" relative cursor-pointer mt-6 flex gap-2 items-center w-fit"
             htmlFor="isPrivate"
@@ -195,7 +264,7 @@ export default function TemplateModal() {
             <div className=" mt-8">
               {errorMessage && (
                 <div className=" px-2 py-1 text-red-500 text-sm">
-                  이미 존재하는 저장소 이름입니다.
+                  {errorMessage}
                 </div>
               )}
               <button
