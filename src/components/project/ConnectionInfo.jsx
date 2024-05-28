@@ -39,7 +39,7 @@ export default function ConnectionInfo({ webhookUrl, domainUrl }) {
         <div className=" bg-white p-5 flex justify-between items-center h-[70px]">
           <div className=" flex items-center gap-5">
             <FaLocationArrow size={18} className=" text-blue-500" />
-            <div className=" text-sm ">{domainUrl}</div>
+            <div className=" text-sm ">{webhookUrl}</div>
           </div>
         </div>
       )}
