@@ -4,7 +4,7 @@ import { MdOutlineArrowDropDownCircle } from "react-icons/md";
 
 export default function ConnectionInfo({ webhookUrl, domainUrl }) {
   const linkDomainUrl = () => {
-    window.open(domainUrl, "_blank");
+    window.open(`https://${domainUrl}`, "_blank");
   };
   return (
     <div>
