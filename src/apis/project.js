@@ -40,3 +40,8 @@ export const deployProject = async (id) => {
   const response = await instance.post(`/project/deploy`, { id });
   return response.data;
 };
+
+export const checkProjectDeployStatus = async (id) => {
+  const response = await instance.get(`/project/deploy/status?buildId=${id}`);
+  return response.data;
+};

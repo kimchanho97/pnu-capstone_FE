@@ -1,8 +1,12 @@
 import cn from "classnames";
 import { useAtomValue } from "jotai";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoTerminal } from "react-icons/io5";
-import { buildProject, deployProject } from "../../apis/project";
+import {
+  buildProject,
+  checkProjectDeployStatus,
+  deployProject,
+} from "../../apis/project";
 import { ReactComponent as GithubIcon } from "../../assets/github.svg";
 import useModal from "../../hooks/useModal";
 import { userAtom } from "../../store";
@@ -30,6 +34,7 @@ export default function ProjectItem({
   const { openModal } = useModal();
   const isBuildable = [0, 2, 4, 5, 6].includes(project.status);
   const isDeployable = project.status === 2 || project.status === 6;
+  const intervalRef = useRef(null);
 
   const openGithubLink = () => {
     window.open(`https://github.com/${user.login}/${project.name}`, "_blank");
@@ -82,6 +87,25 @@ export default function ProjectItem({
     ) {
       setIsSubmitting(false);
     }
+  }, [project.status]);
+
+  useEffect(() => {
+    if (project.status === 3) {
+      try {
+        intervalRef.current = setInterval(async () => {
+          const response = await checkProjectDeployStatus(
+            project.currentBuildId,
+          );
+          if (response.status === 4 || response.status === 6) {
+            clearInterval(intervalRef.current);
+          }
+        }, 1000 * 60);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    return () => clearInterval(intervalRef.current);
   }, [project.status]);
 
   return (
