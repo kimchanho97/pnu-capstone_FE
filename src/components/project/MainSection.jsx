@@ -1,10 +1,15 @@
+import CircularProgress from "@mui/material/CircularProgress";
 import cn from "classnames";
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { GoGitBranch } from "react-icons/go";
 import useModal from "../../hooks/useModal";
-import { projectAtom } from "../../store";
+import {
+  creatingProjectsAtom,
+  projectAtom,
+  projectTimeoutsAtom,
+} from "../../store";
 import MainMenu from "./MainMenu";
 import ProjectDetail from "./ProjectDetail";
 import ProjectItem from "./ProjectItem";
@@ -13,6 +18,8 @@ export default function MainSection() {
   const { openModal } = useModal();
   const [selectedProject, setSelectedProject] = useState(false);
   const projects = useAtomValue(projectAtom);
+  const creatingProjects = useAtomValue(creatingProjectsAtom);
+  const [projectTimeouts, setProjectTimeouts] = useAtom(projectTimeoutsAtom);
 
   const openSelectRepoModal = () => {
     openModal({ modalType: "SelectRepoModal" });
@@ -28,6 +35,33 @@ export default function MainSection() {
       }
     }
   }, [projects, selectedProject]);
+
+  useEffect(() => {
+    return () => {
+      // MainSection이 언마운트될 때 모든 타이머를 정리합니다.
+      projectTimeouts.forEach((timeout) => {
+        const timeoutId = Object.values(timeout)[0];
+        clearTimeout(timeoutId);
+      });
+      setProjectTimeouts([]); // projectTimeouts 배열 초기화
+    };
+  }, []);
+
+  useEffect(() => {
+    if (selectedProject) {
+      const timeout = projectTimeouts.find(
+        (item) => item[selectedProject.id.toString()] !== undefined,
+      );
+      if (timeout) {
+        clearTimeout(timeout[selectedProject.id.toString()]);
+        setProjectTimeouts((prev) =>
+          prev.filter(
+            (item) => item[selectedProject.id.toString()] === undefined,
+          ),
+        );
+      }
+    }
+  }, [selectedProject]);
 
   return (
     <div className=" h-full">
@@ -66,14 +100,30 @@ export default function MainSection() {
             ) : (
               <>
                 {projects.map((project) => (
-                  <ProjectItem
-                    key={project.id}
-                    project={project}
-                    setSelectedProject={setSelectedProject}
-                    className={
-                      "border rounded-xl shadow p-5 h-[200px] w-[320px]"
-                    }
-                  />
+                  <div key={project.id}>
+                    {creatingProjects.includes(project.id) && (
+                      <div className=" relative">
+                        <div className=" h-[200px] w-[320px] rounded-xl shadow absolute z-10 opacity-75 bg-black text-zinc-50">
+                          <div className=" flex flex-col text-sm p-3 items-center">
+                            <span>프로젝트 인증서 생성 중입니다.</span>
+                            <span>
+                              인증서 생성에는 약 2분 정도 소요될 수 있습니다.
+                            </span>
+                            <div className=" pt-8">
+                              <CircularProgress color="inherit" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    <ProjectItem
+                      project={project}
+                      setSelectedProject={setSelectedProject}
+                      className={
+                        "border rounded-xl shadow p-5 h-[200px] w-[320px]"
+                      }
+                    />
+                  </div>
                 ))}
                 <button
                   className=" w-[320px] h-[200px] hover:border border-dotted rounded-xl border-blue-300 group"

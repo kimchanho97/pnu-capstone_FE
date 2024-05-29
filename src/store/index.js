@@ -24,3 +24,15 @@ export const modalAtom = atomWithStorage(
 );
 
 export const projectAtom = atomWithStorage("projects", [], storage);
+
+export const creatingProjectsAtom = atomWithStorage(
+  "creatingProjects",
+  [],
+  storage,
+);
+
+export const projectTimeoutsAtom = atomWithStorage(
+  "projectTimeouts",
+  [],
+  storage,
+);

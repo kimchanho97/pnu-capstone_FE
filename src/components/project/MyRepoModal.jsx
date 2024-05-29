@@ -1,14 +1,18 @@
 import CircularProgress from "@mui/material/CircularProgress";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import React, { useEffect, useState } from "react";
 import { FaCheck } from "react-icons/fa";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { useQuery, useQueryClient } from "react-query";
-import { createProject, checkSubdomain } from "../../apis/project";
+import { checkSubdomain, createProject } from "../../apis/project";
 import { fetchRepos } from "../../apis/user";
 import { ReactComponent as GithubIcon } from "../../assets/github.svg";
 import useModal from "../../hooks/useModal";
-import { userAtom } from "../../store";
+import {
+  creatingProjectsAtom,
+  projectTimeoutsAtom,
+  userAtom,
+} from "../../store";
 import { backendList } from "../../utils/constant";
 import FrameworkList from "./FrameworkList";
 import RepoList from "./RepoList";
@@ -34,6 +38,8 @@ export default function MyRepoModal() {
   const [errorMessage, setErrorMessage] = useState("");
   const [subdomain, setSubdomain] = useState("");
   const [isUsableSubdomain, setIsUsableSubdomain] = useState(false);
+  const setCreatingProjects = useSetAtom(creatingProjectsAtom);
+  const setProjectTimeouts = useSetAtom(projectTimeoutsAtom);
   const isBackend = backendList.includes(selectedFramework);
 
   const { isLoading, data: repos } = useQuery(
@@ -152,7 +158,17 @@ export default function MyRepoModal() {
         subdomain,
       };
       setIsSubmitting(true);
-      await createProject(data);
+      const response = await createProject(data);
+      console.log(response);
+      const projectId = response.projectId;
+      setCreatingProjects((prev) => [...prev, projectId]);
+
+      // 2분 후에 배열에서 해당 프로젝트 아이디를 제거
+      const timeoutId = setTimeout(() => {
+        setCreatingProjects((prev) => prev.filter((id) => id !== projectId));
+      }, 1000 * 60 * 2);
+      setProjectTimeouts((prev) => [...prev, { [projectId]: timeoutId }]);
+
       closeModal();
       queryClient.invalidateQueries(["/projects", user.login]);
     } catch (error) {
