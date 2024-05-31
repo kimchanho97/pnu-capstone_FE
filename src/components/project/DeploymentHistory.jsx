@@ -151,7 +151,7 @@ export default function DeploymentHistory({ deploys, builds, project }) {
                       </span>
                     </div>
                   </div>
-                  <div className=" text-xs">{buildDate}</div>
+                  <div className=" text-[10px]">{buildDate}</div>
                 </div>
               </div>
               <button
