@@ -250,7 +250,7 @@ export default function MyRepoModal() {
                 />
               </div>
               <div>
-                <div className=" text-sm mb-1">Secret Variables</div>
+                <div className=" text-sm mb-1">환경 변수</div>
                 <SecretVariableList
                   secretVariables={secretVariables}
                   setSecretVariables={setSecretVariables}
