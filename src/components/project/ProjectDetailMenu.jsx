@@ -34,7 +34,7 @@ export default function ProjectDetailMenu({
           })}
           onClick={() => setSelectedDetailOption("환경 설정")}
         >
-          횐경 설정
+          환경 설정
         </div>
       </button>
     </div>
