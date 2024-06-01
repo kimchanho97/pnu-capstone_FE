@@ -142,7 +142,7 @@ export default function TemplateModal() {
       // 2분 후에 배열에서 해당 프로젝트 아이디를 제거
       const timeoutId = setTimeout(() => {
         setCreatingProjects((prev) => prev.filter((id) => id !== projectId));
-      }, 1000 * 60 * 2);
+      }, 1000 * 3);
       setProjectTimeouts((prev) => [...prev, { [projectId]: timeoutId }]);
 
       closeModal();

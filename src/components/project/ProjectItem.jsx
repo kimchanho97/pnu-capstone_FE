@@ -28,7 +28,11 @@ export default function ProjectItem({
   className,
 }) {
   const ProjectIconComponent = icons[project?.framework];
-  const subtitle = backendList.includes(project.framework) ? "server" : "web";
+  const subtitle = backendList.includes(project.framework)
+    ? "server"
+    : project.framework === "docker"
+    ? "docker"
+    : "web";
   const user = useAtomValue(userAtom);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { openModal } = useModal();
@@ -110,23 +114,28 @@ export default function ProjectItem({
 
   return (
     <div className={cn("flex flex-col justify-between bg-white", className)}>
-      <div className=" flex gap-2 w-full justify-between">
-        <button
-          className=" flex gap-2"
-          onClick={() => {
-            setSelectedProject(project);
-          }}
-          disabled={className.includes("w-full")}
-        >
-          <ProjectIconComponent className=" w-10 h-10" />
-          <div className=" flex flex-col text-sm items-start">
-            <span className=" font-semibold">{project.name}</span>
-            <span>{subtitle}</span>
-          </div>
-        </button>
-        <button onClick={openGithubLink}>
-          <GithubIcon className=" w-5 h-5" />
-        </button>
+      <div>
+        <div className=" flex gap-2 w-full justify-between">
+          <button
+            className=" flex gap-2"
+            onClick={() => {
+              setSelectedProject(project);
+            }}
+            disabled={className.includes("w-full")}
+          >
+            <ProjectIconComponent className=" w-10 h-10" />
+            <div className=" flex flex-col text-sm items-start">
+              <span className=" font-semibold">{project.name}</span>
+              <span>{subtitle}</span>
+            </div>
+          </button>
+          <button onClick={openGithubLink} className=" flex h-fit">
+            <GithubIcon className=" w-5 h-5 " />
+          </button>
+        </div>
+        <div className=" text-[12px] pt-3">
+          카카오테크캠퍼스 3단계 프로젝트 - 순수웨딩
+        </div>
       </div>
       <div className=" flex justify-between">
         <div className=" flex gap-1 items-center">

@@ -12,6 +12,12 @@ export const fetchProjectDetail = async (id) => {
   return response.data;
 };
 
+export const fetchFavorites = async (user_id) => {
+  // 쿼리 키: ["/favorites", user.id]
+  const response = await instance.get(`/project/favorite/${user_id}`);
+  return response.data;
+};
+
 export const deleteProject = async (id) => {
   const response = await instance.delete(`/project/${id}`);
   return response.data;
@@ -43,5 +49,20 @@ export const deployProject = async (id) => {
 
 export const checkProjectDeployStatus = async (id) => {
   const response = await instance.get(`/project/deploy/status?buildId=${id}`);
+  return response.data;
+};
+
+export const addFavorite = async ({ userId, projectId }) => {
+  const response = await instance.post(`/project/favorite`, {
+    userId,
+    projectId,
+  });
+  return response.data;
+};
+
+export const removeFavorite = async ({ userId, projectId }) => {
+  const response = await instance.delete(`/project/favorite`, {
+    params: { userId, projectId },
+  });
   return response.data;
 };

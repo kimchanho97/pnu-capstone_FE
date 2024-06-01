@@ -96,7 +96,9 @@ export default function DeploymentHistory({ deploys, builds, project }) {
                       </span>
                     </div>
                   </div>
-                  <div className=" text-[10px]">{deployDate}</div>
+                  <div className=" text-[10px]">
+                    {deployDate.replace("GMT", "")}
+                  </div>
                 </div>
               </div>
               <button
@@ -151,7 +153,9 @@ export default function DeploymentHistory({ deploys, builds, project }) {
                       </span>
                     </div>
                   </div>
-                  <div className=" text-[10px]">{buildDate}</div>
+                  <div className=" text-[10px]">
+                    {buildDate.replace("GMT", "")}
+                  </div>
                 </div>
               </div>
               <button

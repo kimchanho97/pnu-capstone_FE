@@ -1,67 +1,23 @@
 import CircularProgress from "@mui/material/CircularProgress";
 import cn from "classnames";
-import { useAtom, useAtomValue } from "jotai";
-import React, { useEffect, useState } from "react";
+import { useAtomValue } from "jotai";
+import React from "react";
 import { FaPlus } from "react-icons/fa";
 import { GoGitBranch } from "react-icons/go";
 import useModal from "../../hooks/useModal";
-import {
-  creatingProjectsAtom,
-  projectAtom,
-  projectTimeoutsAtom,
-} from "../../store";
+import { creatingProjectsAtom, projectAtom } from "../../store";
 import MainMenu from "./MainMenu";
 import ProjectDetail from "./ProjectDetail";
 import ProjectItem from "./ProjectItem";
 
-export default function MainSection() {
+export default function MainSection({ selectedProject, setSelectedProject }) {
   const { openModal } = useModal();
-  const [selectedProject, setSelectedProject] = useState(false);
   const projects = useAtomValue(projectAtom);
   const creatingProjects = useAtomValue(creatingProjectsAtom);
-  const [projectTimeouts, setProjectTimeouts] = useAtom(projectTimeoutsAtom);
 
   const openSelectRepoModal = () => {
     openModal({ modalType: "SelectRepoModal" });
   };
-
-  useEffect(() => {
-    if (selectedProject) {
-      const updatedProject = projects.find(
-        (project) => project.id === selectedProject.id,
-      );
-      if (updatedProject) {
-        setSelectedProject(updatedProject);
-      }
-    }
-  }, [projects, selectedProject]);
-
-  useEffect(() => {
-    return () => {
-      // MainSection이 언마운트될 때 모든 타이머를 정리합니다.
-      projectTimeouts.forEach((timeout) => {
-        const timeoutId = Object.values(timeout)[0];
-        clearTimeout(timeoutId);
-      });
-      setProjectTimeouts([]); // projectTimeouts 배열 초기화
-    };
-  }, []);
-
-  useEffect(() => {
-    if (selectedProject) {
-      const timeout = projectTimeouts.find(
-        (item) => item[selectedProject.id.toString()] !== undefined,
-      );
-      if (timeout) {
-        clearTimeout(timeout[selectedProject.id.toString()]);
-        setProjectTimeouts((prev) =>
-          prev.filter(
-            (item) => item[selectedProject.id.toString()] === undefined,
-          ),
-        );
-      }
-    }
-  }, [selectedProject]);
 
   return (
     <div className=" h-full">
@@ -75,7 +31,7 @@ export default function MainSection() {
       >
         <div className=" p-[40px]">
           <div className=" text-2xl border-b-2 h-[40px] pb-[4px] flex justify-between">
-            <span>Project</span>
+            <button onClick={() => setSelectedProject(null)}>Project</button>
             <div className=" flex items-center gap-2">
               <span className=" text-sm">배포환경</span>
               <div className=" flex text-sm items-center gap-1 bg-zinc-200 p-1 px-2 rounded-md">
@@ -86,17 +42,14 @@ export default function MainSection() {
           </div>
           <div
             className={cn({
-              " grid grid-cols-1 gap-7 mt-10 sm:grid-cols-2 md:grid-cols-3 overflow-y-auto":
+              " grid grid-cols-1 gap-7 mt-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xxl:grid-cols-6 xxxl:grid-cols-7 overflow-y-auto":
                 !selectedProject,
               "mt-3 overflow-y-auto": selectedProject,
             })}
             style={{ maxHeight: `calc(100vh - 220px)` }}
           >
             {selectedProject ? (
-              <ProjectDetail
-                project={selectedProject}
-                setSelectedProject={setSelectedProject}
-              />
+              <ProjectDetail project={selectedProject} />
             ) : (
               <>
                 {projects.map((project) => (
