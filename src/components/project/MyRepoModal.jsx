@@ -57,6 +57,10 @@ export default function MyRepoModal() {
       setErrorMessage("SubDomain을 입력해주세요.");
       return;
     }
+    if (subdomain === "backend") {
+      setErrorMessage("이미 사용중인 SubDomain입니다.");
+      return;
+    }
 
     try {
       const response = await checkSubdomain(subdomain);
