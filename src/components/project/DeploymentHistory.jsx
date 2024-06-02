@@ -37,7 +37,7 @@ export default function DeploymentHistory({ deploys, builds, project }) {
         if (response.status === 4 || response.status === 6) {
           clearInterval(intervalRef.current);
         }
-      }, 1000 * 60);
+      }, 1000 * 5);
     } catch (error) {
       const { status } = error.response.data?.error;
       if (status === 4001) {
