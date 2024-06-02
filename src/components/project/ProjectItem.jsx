@@ -44,6 +44,16 @@ export default function ProjectItem({
     window.open(`https://github.com/${user.login}/${project.name}`, "_blank");
   };
 
+  const openLogModal = () => {
+    openModal({
+      modalType: "LogModal",
+      props: {
+        id: project.id,
+        name: project.name,
+      },
+    });
+  };
+
   const handleBuildProject = async () => {
     try {
       setIsSubmitting(true);
@@ -126,7 +136,7 @@ export default function ProjectItem({
       </div>
       <div className=" flex justify-between">
         <div className=" flex gap-1 items-center">
-          <button>
+          <button onClick={openLogModal}>
             <IoTerminal className=" w-4 h-4" />
           </button>
           <div className=" flex gap-1">

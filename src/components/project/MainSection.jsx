@@ -38,7 +38,12 @@ export default function MainSection({ selectedProject, setSelectedProject }) {
       >
         <div className=" p-[40px]">
           <div className=" text-2xl border-b-2 h-[40px] pb-[4px] flex justify-between">
-            <button onClick={() => setSelectedProject(null)}>Project</button>
+            <button
+              onClick={() => setSelectedProject(null)}
+              className=" hover:underline"
+            >
+              Project
+            </button>
             <div className=" flex items-center gap-2">
               <span className=" text-sm">배포환경</span>
               <div className=" flex text-sm items-center gap-1 bg-zinc-200 p-1 px-2 rounded-md">
