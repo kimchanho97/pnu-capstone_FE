@@ -66,3 +66,21 @@ export const removeFavorite = async ({ userId, projectId }) => {
   });
   return response.data;
 };
+
+export const updateProjectDescription = async ({ projectId, description }) => {
+  const response = await instance.put(`/project/${projectId}/description`, {
+    description,
+  });
+  return response.data;
+};
+
+export const updateProjectDetailedDescription = async ({
+  projectId,
+  detailedDescription,
+}) => {
+  const response = await instance.put(
+    `/project/${projectId}/detailed_description`,
+    { detailedDescription },
+  );
+  return response.data;
+};

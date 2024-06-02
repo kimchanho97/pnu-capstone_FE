@@ -68,13 +68,21 @@ export default function ProjectItem({
       setIsSubmitting(true);
       const response = await deployProject(project.currentBuildId);
       console.log(response);
+
+      intervalRef.current = setInterval(async () => {
+        const response = await checkProjectDeployStatus(project.currentBuildId);
+        console.log(response);
+        if (response.status === 4 || response.status === 6) {
+          clearInterval(intervalRef.current);
+        }
+      }, 1000 * 60);
     } catch (error) {
       const { status } = error.response.data?.error;
       if (status === 4001) {
         openModal({
           modalType: "MessageModal",
           props: {
-            message: "이미 동일한 시점의 배포 내역이 존재합니다.",
+            message: "현재 배포된 내용과 동일한 시점입니다.",
           },
         });
       }
@@ -91,25 +99,6 @@ export default function ProjectItem({
     ) {
       setIsSubmitting(false);
     }
-  }, [project.status]);
-
-  useEffect(() => {
-    if (project.status === 3) {
-      try {
-        intervalRef.current = setInterval(async () => {
-          const response = await checkProjectDeployStatus(
-            project.currentBuildId,
-          );
-          if (response.status === 4 || response.status === 6) {
-            clearInterval(intervalRef.current);
-          }
-        }, 1000 * 60);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    return () => clearInterval(intervalRef.current);
   }, [project.status]);
 
   return (
@@ -133,9 +122,7 @@ export default function ProjectItem({
             <GithubIcon className=" w-5 h-5 " />
           </button>
         </div>
-        <div className=" text-[12px] pt-3">
-          카카오테크캠퍼스 3단계 프로젝트 - 순수웨딩
-        </div>
+        <div className=" text-xs pt-3 line-clamp-2">{project.description}</div>
       </div>
       <div className=" flex justify-between">
         <div className=" flex gap-1 items-center">

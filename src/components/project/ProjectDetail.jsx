@@ -1,5 +1,5 @@
 import { CircularProgress } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { fetchProjectDetail } from "../../apis/project";
 import ConnectionInfo from "./ConnectionInfo";
@@ -48,6 +48,7 @@ export default function ProjectDetail({ project }) {
           secrets={projectDetail.secrets}
           project={project}
           subdomain={projectDetail.subdomain}
+          detailedDescription={projectDetail.detailedDescription}
         />
       )}
     </div>

@@ -1,15 +1,35 @@
 import { useAtomValue } from "jotai";
-import React from "react";
-import { useRef } from "react";
+import React, { useRef } from "react";
 import { MdOutlineArrowDropDownCircle } from "react-icons/md";
+import { useMutation, useQueryClient } from "react-query";
+import {
+  deleteProject,
+  updateProjectDescription,
+  updateProjectDetailedDescription,
+} from "../../apis/project";
+import useModal from "../../hooks/useModal";
 import { userAtom } from "../../store";
-import { deleteProject } from "../../apis/project";
 import AutoResizeTextarea from "../common/AutoResizeTextarea";
+import { useState } from "react";
 
-export default function ProjectSetting({ project, secrets, subdomain }) {
+export default function ProjectSetting({
+  project,
+  secrets,
+  subdomain,
+  detailedDescription,
+}) {
   const user = useAtomValue(userAtom);
   const descriptionRef = useRef(null);
   const detailedDescriptionRef = useRef(null);
+  const queryClient = useQueryClient();
+  const { mutate: updateProjectDescriptionMutate } = useMutation(
+    updateProjectDescription,
+  );
+  const { mutate: updateProjectDetailedDescriptionMutate } = useMutation(
+    updateProjectDetailedDescription,
+  );
+  const { openModal } = useModal();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleDeleteProject = async () => {
     try {
@@ -18,6 +38,51 @@ export default function ProjectSetting({ project, secrets, subdomain }) {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleUpdateProjectDescription = async () => {
+    setIsSubmitting(true);
+    updateProjectDescriptionMutate(
+      { projectId: project.id, description: descriptionRef.current.value },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries(["/projects", user.login]);
+          openModal({
+            modalType: "MessageModal",
+            props: { message: "변경 사항이 성공적으로 저장되었습니다" },
+          });
+          setIsSubmitting(false);
+        },
+        onError: (error) => {
+          console.error(error);
+          setIsSubmitting(false);
+        },
+      },
+    );
+  };
+
+  const handleUpdateProjectDetailedDescription = async () => {
+    setIsSubmitting(true);
+    updateProjectDetailedDescriptionMutate(
+      {
+        projectId: project.id,
+        detailedDescription: detailedDescriptionRef.current.value,
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries(["/project", project.id]);
+          openModal({
+            modalType: "MessageModal",
+            props: { message: "변경 사항이 성공적으로 저장되었습니다" },
+          });
+          setIsSubmitting(false);
+        },
+        onError: (error) => {
+          console.error(error);
+          setIsSubmitting(false);
+        },
+      },
+    );
   };
 
   return (
@@ -53,10 +118,16 @@ export default function ProjectSetting({ project, secrets, subdomain }) {
           <MdOutlineArrowDropDownCircle className=" text-green-600" />
           <span>한 줄 설명</span>
         </div>
-        <AutoResizeTextarea ref={descriptionRef} />
+        <AutoResizeTextarea
+          ref={descriptionRef}
+          placeholder={"한 줄 설명을 입력해주세요."}
+          defaultValue={project.description}
+          maxLength={100}
+        />
         <button
-          className=" bg-blue-500 text-white rounded px-5 py-2 text-[12px] mt-1"
-          onClick={handleDeleteProject}
+          className=" bg-blue-500 text-white rounded px-5 py-2 text-xs mt-1"
+          onClick={handleUpdateProjectDescription}
+          disabled={isSubmitting}
         >
           저장하기
         </button>
@@ -66,10 +137,16 @@ export default function ProjectSetting({ project, secrets, subdomain }) {
           <MdOutlineArrowDropDownCircle className=" text-green-600" />
           <span>상세 설명</span>
         </div>
-        <AutoResizeTextarea ref={detailedDescriptionRef} />
+        <AutoResizeTextarea
+          ref={detailedDescriptionRef}
+          className={"min-h-[200px]"}
+          placeholder={"상세 설명을 입력해주세요."}
+          defaultValue={detailedDescription}
+        />
         <button
-          className=" bg-blue-500 text-white rounded px-5 py-2 text-[12px] mt-1"
-          onClick={handleDeleteProject}
+          className=" bg-blue-500 text-white rounded px-5 py-2 text-xs mt-1"
+          onClick={handleUpdateProjectDetailedDescription}
+          disabled={isSubmitting}
         >
           저장하기
         </button>
@@ -102,7 +179,7 @@ export default function ProjectSetting({ project, secrets, subdomain }) {
             프로젝트를 삭제하면 모든 데이터가 삭제됩니다.
           </div>
           <button
-            className=" bg-red-500 text-white px-5 py-[6px] rounded-md mt-5"
+            className=" bg-red-500 text-white px-5 py-[6px] rounded-md mt-5 tracking-tight text-sm"
             onClick={handleDeleteProject}
           >
             프로젝트 삭제

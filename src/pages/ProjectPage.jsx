@@ -20,9 +20,12 @@ export default function ProjectPage() {
     ["/projects", user.login],
     fetchProjects,
   );
-  const { isLoading2, data: favorites } = useQuery(
+  const { isLoading: isLoadingFavorites, data: favorites } = useQuery(
     ["/favorites", user.id],
     () => fetchFavorites(user.id),
+    {
+      enabled: !!user.id,
+    },
   );
 
   useEffect(() => {
@@ -36,16 +39,19 @@ export default function ProjectPage() {
   useEffect(() => {
     if (data) {
       setProjects(data);
-      if (selectedProject) {
-        const updatedProject = data.find(
-          (project) => project.id === selectedProject.id,
-        );
-        if (updatedProject) {
-          setSelectedProject(updatedProject);
-        }
+    }
+  }, [data, setProjects]);
+
+  useEffect(() => {
+    if (selectedProject) {
+      const updatedProject = projects.find(
+        (project) => project.id === selectedProject.id,
+      );
+      if (updatedProject) {
+        setSelectedProject(updatedProject);
       }
     }
-  }, [data, selectedProject, setProjects]);
+  }, [projects, selectedProject]);
 
   // SSE를 통해 프로젝트 상태를 실시간으로 업데이트합니다.
   useEffect(() => {
@@ -108,7 +114,7 @@ export default function ProjectPage() {
     }
   }, [selectedProject]);
 
-  if (isLoading || isLoading2 || !projects) {
+  if (isLoading || isLoadingFavorites || !projects) {
     return (
       <div className=" flex justify-center mt-10">
         <CircularProgress size={20} />

@@ -1,7 +1,7 @@
 import CircularProgress from "@mui/material/CircularProgress";
 import cn from "classnames";
 import { useAtomValue } from "jotai";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { FaPlus } from "react-icons/fa";
 import { GoGitBranch } from "react-icons/go";
 import useModal from "../../hooks/useModal";
@@ -14,10 +14,17 @@ export default function MainSection({ selectedProject, setSelectedProject }) {
   const { openModal } = useModal();
   const projects = useAtomValue(projectAtom);
   const creatingProjects = useAtomValue(creatingProjectsAtom);
+  const containerRef = useRef(null);
 
   const openSelectRepoModal = () => {
     openModal({ modalType: "SelectRepoModal" });
   };
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [selectedProject]);
 
   return (
     <div className=" h-full">
@@ -46,6 +53,7 @@ export default function MainSection({ selectedProject, setSelectedProject }) {
                 !selectedProject,
               "mt-3 overflow-y-auto": selectedProject,
             })}
+            ref={containerRef}
             style={{ maxHeight: `calc(100vh - 220px)` }}
           >
             {selectedProject ? (

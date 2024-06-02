@@ -1,13 +1,13 @@
 import cn from "classnames";
 import { useAtomValue } from "jotai";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import {
   MdOutlineArrowDropDownCircle,
   MdOutlineRadioButtonUnchecked,
 } from "react-icons/md";
 import { useQueryClient } from "react-query";
-import { deployProject } from "../../apis/project";
+import { checkProjectDeployStatus, deployProject } from "../../apis/project";
 import { ReactComponent as GithubIcon } from "../../assets/github.svg";
 import useModal from "../../hooks/useModal";
 import { userAtom } from "../../store";
@@ -23,19 +23,28 @@ export default function DeploymentHistory({ deploys, builds, project }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const isRollbackable = [2, 4, 5, 6].includes(project.status);
   const queryClient = useQueryClient();
+  const intervalRef = useRef(null);
 
   const handleDeployProject = async (buildId) => {
     try {
       setIsSubmitting(true);
       const response = await deployProject(buildId);
       console.log(response);
+
+      intervalRef.current = setInterval(async () => {
+        const response = await checkProjectDeployStatus(buildId);
+        console.log(response);
+        if (response.status === 4 || response.status === 6) {
+          clearInterval(intervalRef.current);
+        }
+      }, 1000 * 60);
     } catch (error) {
       const { status } = error.response.data?.error;
       if (status === 4001) {
         openModal({
           modalType: "MessageModal",
           props: {
-            message: "이미 동일한 시점의 배포 내역이 존재합니다.",
+            message: "현재 배포된 내용과 동일한 시점입니다.",
           },
         });
       }
