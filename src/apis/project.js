@@ -18,8 +18,16 @@ export const fetchFavorites = async (user_id) => {
   return response.data;
 };
 
+export const fetchProjectLogs = async (projectId) => {
+  // 쿼리 키: ["/logs", modal?.props?.id],
+  const response = await instance.get(`/project/${projectId}/logs`);
+  return response.data;
+};
+
 export const deleteProject = async (id) => {
-  const response = await instance.delete(`/project/${id}`);
+  const response = await instance.delete(`/project/${id}`, {
+    timeout: 5 * 1000,
+  });
   return response.data;
 };
 

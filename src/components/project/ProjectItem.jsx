@@ -132,7 +132,9 @@ export default function ProjectItem({
             <GithubIcon className=" w-5 h-5 " />
           </button>
         </div>
-        <div className=" text-xs pt-3 line-clamp-2">{project.description}</div>
+        <div className=" text-xs pt-3 line-clamp-2 whitespace-pre-wrap">
+          {project.description}
+        </div>
       </div>
       <div className=" flex justify-between">
         <div className=" flex gap-1 items-center">

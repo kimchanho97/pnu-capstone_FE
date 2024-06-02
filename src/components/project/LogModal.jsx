@@ -1,8 +1,10 @@
 import cn from "classnames";
 import { useAtomValue } from "jotai";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BsReverseListColumnsReverse } from "react-icons/bs";
 import { IoIosCloseCircleOutline } from "react-icons/io";
+import { useQuery } from "react-query";
+import { fetchProjectLogs } from "../../apis/project";
 import useModal from "../../hooks/useModal";
 import useOnClickOutside from "../../hooks/useOnClickOutside";
 import { modalAtom } from "../../store";
@@ -12,13 +14,23 @@ export default function LogModal() {
   const modalRef = useRef(null);
   const modalWrapperRef = useRef(null);
   const { closeModal } = useModal();
-  const [option, setOption] = useState("build");
+  const [option, setOption] = useState("buildLog");
+
+  const { isLoading, data: logs } = useQuery(["/logs", modal?.props?.id], () =>
+    fetchProjectLogs(modal?.props?.id),
+  );
 
   const handleOnChangeOption = (e) => {
     setOption(e.target.value);
   };
 
   useOnClickOutside(modalRef, modalWrapperRef, closeModal);
+
+  useEffect(() => {
+    if (logs) {
+      console.log(logs);
+    }
+  }, [logs]);
 
   return (
     <div
@@ -45,9 +57,9 @@ export default function LogModal() {
                 <button
                   className={cn(
                     "  p-1 rounded px-2",
-                    option === "build" ? "bg-zinc-300" : "bg-zinc-100",
+                    option === "buildLog" ? "bg-zinc-300" : "bg-zinc-100",
                   )}
-                  value={"build"}
+                  value={"buildLog"}
                   onClick={handleOnChangeOption}
                 >
                   빌드 로그
@@ -55,9 +67,9 @@ export default function LogModal() {
                 <button
                   className={cn(
                     "  p-1 rounded px-2",
-                    option === "deploy" ? "bg-zinc-300" : "bg-zinc-100",
+                    option === "deployLog" ? "bg-zinc-300" : "bg-zinc-100",
                   )}
-                  value={"deploy"}
+                  value={"deployLog"}
                   onClick={handleOnChangeOption}
                 >
                   배포 로그
@@ -75,7 +87,7 @@ export default function LogModal() {
               height: `calc(100vh - 45px)`,
             }}
           >
-            {`
+            {/* {`
 [INFO] Scanning for projects... [INFO] [INFO] --------------------
 [INFO] Scanning for projects... [INFO] [INFO] --------------------
 [INFO] Building Sample Project 1.0-SNAPSHOT [INFO]
@@ -137,7 +149,8 @@ com.example.AppTest [INFO] [INFO] --- maven-jar-plugin:2.4:jar
 ------------------------------------------------------------------------
 [INFO] Total time: 2.345 s [INFO] Finished at:
 2024-06-02T12:34:56+00:00 [INFO] Final Memory: 20M/200M [INFO]
-------------------------------------------------------------------------`}
+------------------------------------------------------------------------`} */}
+            {logs?.[option]}
           </div>
         </div>
       </div>
