@@ -16,8 +16,12 @@ export default function LogModal() {
   const { closeModal } = useModal();
   const [option, setOption] = useState("buildLog");
 
-  const { isLoading, data: logs } = useQuery(["/logs", modal?.props?.id], () =>
-    fetchProjectLogs(modal?.props?.id),
+  const { isLoading, data: logs } = useQuery(
+    ["/logs", modal?.props?.id],
+    () => fetchProjectLogs(modal?.props?.id),
+    {
+      enabled: !!modal?.props?.id,
+    },
   );
 
   const handleOnChangeOption = (e) => {
