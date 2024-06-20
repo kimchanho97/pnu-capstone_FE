@@ -178,12 +178,21 @@ export default function SideSection({ setSelectedProject, favorites }) {
                 <HiSquares2X2 />
                 <span className=" text-sm">{project.name}</span>
               </button>
-              <button
-                onClick={() => handleAddFavorite(project.id)}
-                disabled={isSubmitting}
-              >
-                <GoStar />
-              </button>
+              {favorites.includes(project.id) ? (
+                <button
+                  onClick={() => handleRemoveFavorite(project.id)}
+                  disabled={isSubmitting}
+                >
+                  <GoStarFill />
+                </button>
+              ) : (
+                <button
+                  onClick={() => handleAddFavorite(project.id)}
+                  disabled={isSubmitting}
+                >
+                  <GoStar />
+                </button>
+              )}
             </div>
           );
         })}

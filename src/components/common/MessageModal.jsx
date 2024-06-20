@@ -22,7 +22,11 @@ export default function MessageModal() {
         ref={modalRef}
       >
         <div className=" flex flex-col p-10 items-center justify-between h-full">
-          <div className=" font-semibold">{modal?.props?.message}</div>
+          <div className=" font-semibold flex flex-col items-center">
+            {modal?.props?.message?.split("\n").map((line, index) => (
+              <div key={index}>{line}</div>
+            ))}
+          </div>
           <button
             className=" px-4 py-2 bg-blue-500 text-white rounded-md text-xs"
             onClick={closeModal}

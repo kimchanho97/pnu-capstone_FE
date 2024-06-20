@@ -154,7 +154,7 @@ com.example.AppTest [INFO] [INFO] --- maven-jar-plugin:2.4:jar
 [INFO] Total time: 2.345 s [INFO] Finished at:
 2024-06-02T12:34:56+00:00 [INFO] Final Memory: 20M/200M [INFO]
 ------------------------------------------------------------------------`} */}
-            {logs?.[option]}
+            {!isLoading ? <div>Loading...</div> : <div>{logs?.[option]}</div>}
           </div>
         </div>
       </div>

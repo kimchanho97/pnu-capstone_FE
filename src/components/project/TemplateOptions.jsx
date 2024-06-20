@@ -6,13 +6,23 @@ import useModal from "../../hooks/useModal";
 export default function TemplateOptions() {
   const { openModal } = useModal();
   const openTemplateModal = (value, title) => {
-    openModal({
-      modalType: "TemplateModal",
-      props: {
-        value: value,
-        title: title,
-      },
-    });
+    if (["react", "nodejs"].includes(value)) {
+      openModal({
+        modalType: "TemplateModal",
+        props: {
+          value: value,
+          title: title,
+        },
+      });
+    } else {
+      openModal({
+        modalType: "MessageModal",
+        props: {
+          message:
+            "아직 준비 중인 서비스입니다.\n현재는 React와 Node.js만 지원합니다.",
+        },
+      });
+    }
   };
 
   return (
