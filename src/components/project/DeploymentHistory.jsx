@@ -1,6 +1,6 @@
 import cn from "classnames";
 import { useAtomValue } from "jotai";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import {
   MdOutlineArrowDropDownCircle,
