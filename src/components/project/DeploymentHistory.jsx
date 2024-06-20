@@ -37,7 +37,7 @@ export default function DeploymentHistory({ deploys, builds, project }) {
           console.log(error);
         }
         clearTimeout(timerId);
-      }, certainTime);
+      }, 1000 * 30);
     } catch (error) {
       console.log(error);
       const { status } = error?.response?.data?.error;

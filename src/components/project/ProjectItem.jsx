@@ -84,7 +84,7 @@ export default function ProjectItem({
           console.log(error);
         }
         clearTimeout(timerId);
-      }, certainTime);
+      }, 1000 * 30);
     } catch (error) {
       console.log(error);
       const { status } = error?.response?.data?.error;
