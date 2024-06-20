@@ -58,7 +58,8 @@ export default function ProjectItem({
       const response = await buildProject(project.id);
       console.log(response);
     } catch (error) {
-      const { status } = error.response.data?.error;
+      console.log(error);
+      const { status } = error?.response?.data?.error;
       if (status === 4001) {
         openModal({
           modalType: "MessageModal",
@@ -85,7 +86,8 @@ export default function ProjectItem({
         clearTimeout(timerId);
       }, certainTime);
     } catch (error) {
-      const { status } = error.response.data?.error;
+      console.log(error);
+      const { status } = error?.response?.data?.error;
       if (status === 4001) {
         openModal({
           modalType: "MessageModal",

@@ -39,7 +39,8 @@ export default function DeploymentHistory({ deploys, builds, project }) {
         clearTimeout(timerId);
       }, certainTime);
     } catch (error) {
-      const { status } = error.response.data?.error;
+      console.log(error);
+      const { status } = error?.response?.data?.error;
       if (status === 4001) {
         openModal({
           modalType: "MessageModal",
