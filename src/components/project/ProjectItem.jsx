@@ -187,8 +187,8 @@ export default function ProjectItem({
         <div className=" flex gap-1">
           <button
             className={cn(" rounded-md px-3 py-2 text-xs", {
-              "bg-blue-200 hover:bg-blue-300": isBuildable,
-              "text-zinc-500 bg-zinc-200": !isBuildable,
+              "bg-blue-200 hover:bg-blue-300": isBuildable && !isSubmitting,
+              "text-zinc-500 bg-zinc-200": !isBuildable || isSubmitting,
             })}
             disabled={isSubmitting || !isBuildable}
             onClick={handleBuildProject}
@@ -197,8 +197,9 @@ export default function ProjectItem({
           </button>
           <button
             className={cn(" rounded-md px-3 py-2 text-xs ", {
-              " text-black bg-blue-200 hover:bg-blue-300": isDeployable,
-              "bg-zinc-200 text-zinc-500 ": !isDeployable,
+              " text-black bg-blue-200 hover:bg-blue-300":
+                isDeployable && !isSubmitting,
+              "bg-zinc-200 text-zinc-500 ": !isDeployable || isSubmitting,
             })}
             disabled={isSubmitting || !isDeployable}
             onClick={handleDeployProject}

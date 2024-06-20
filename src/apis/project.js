@@ -46,12 +46,24 @@ export const createProject = async (data) => {
 };
 
 export const buildProject = async (id) => {
-  const response = await instance.post(`/project/build`, { id });
+  const response = await instance.post(
+    `/project/build`,
+    { id },
+    {
+      timeout: 1000 * 10,
+    },
+  );
   return response.data;
 };
 
 export const deployProject = async (id) => {
-  const response = await instance.post(`/project/deploy`, { id });
+  const response = await instance.post(
+    `/project/deploy`,
+    { id },
+    {
+      timeout: 1000 * 10,
+    },
+  );
   return response.data;
 };
 

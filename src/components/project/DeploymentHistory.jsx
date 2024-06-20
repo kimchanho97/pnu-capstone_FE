@@ -113,7 +113,7 @@ export default function DeploymentHistory({ deploys, builds, project }) {
               </div>
               <button
                 className={cn(" bg-zinc-200 rounded-md px-3 py-2 text-xs", {
-                  "hover:bg-blue-200": isRollbackable,
+                  "hover:bg-blue-200": isRollbackable && !isSubmitting,
                 })}
                 disabled={!isRollbackable || isSubmitting}
                 onClick={() => handleDeployProject(buildId)}
@@ -170,7 +170,7 @@ export default function DeploymentHistory({ deploys, builds, project }) {
               </div>
               <button
                 className={cn(" bg-zinc-200 rounded-md px-3 py-2 text-xs", {
-                  "hover:bg-blue-200": isRollbackable,
+                  "hover:bg-blue-200": isRollbackable && !isSubmitting,
                 })}
                 disabled={!isRollbackable || isSubmitting}
                 onClick={() => handleDeployProject(id)}
