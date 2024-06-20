@@ -26,7 +26,7 @@ export const fetchProjectLogs = async (projectId) => {
 
 export const deleteProject = async (id) => {
   const response = await instance.delete(`/project/${id}`, {
-    timeout: 5 * 1000,
+    timeout: 1000 * 30,
   });
   return response.data;
 };
@@ -40,7 +40,7 @@ export const checkSubdomain = async (subdomain) => {
 
 export const createProject = async (data) => {
   const response = await instance.post("/project/create", data, {
-    timeout: 30 * 1000,
+    timeout: 1000 * 60,
   });
   return response.data;
 };
