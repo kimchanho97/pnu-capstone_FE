@@ -13,7 +13,7 @@ import {
   projectTimeoutsAtom,
   userAtom,
 } from "../../store";
-import { backendList } from "../../utils/constant";
+import { backendList, certainTime } from "../../utils/constant";
 import FrameworkList from "./FrameworkList";
 import RepoList from "./RepoList";
 import SecretVariableList from "./SecretVariableList";
@@ -171,7 +171,7 @@ export default function MyRepoModal() {
       // 2분 후에 배열에서 해당 프로젝트 아이디를 제거
       const timeoutId = setTimeout(() => {
         setCreatingProjects((prev) => prev.filter((id) => id !== projectId));
-      }, 1000 * 60 * 2);
+      }, certainTime);
       setProjectTimeouts((prev) => [...prev, { [projectId]: timeoutId }]);
 
       closeModal();

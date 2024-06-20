@@ -11,6 +11,7 @@ import { checkProjectDeployStatus, deployProject } from "../../apis/project";
 import { ReactComponent as GithubIcon } from "../../assets/github.svg";
 import useModal from "../../hooks/useModal";
 import { userAtom } from "../../store";
+import { certainTime } from "../../utils/constant";
 
 export default function DeploymentHistory({ deploys, builds, project }) {
   const user = useAtomValue(userAtom);
@@ -36,7 +37,7 @@ export default function DeploymentHistory({ deploys, builds, project }) {
           console.log(error);
         }
         clearTimeout(timerId);
-      }, 1000 * 60 * 2);
+      }, certainTime);
     } catch (error) {
       const { status } = error.response.data?.error;
       if (status === 4001) {

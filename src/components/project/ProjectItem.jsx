@@ -10,7 +10,7 @@ import {
 import { ReactComponent as GithubIcon } from "../../assets/github.svg";
 import useModal from "../../hooks/useModal";
 import { userAtom } from "../../store";
-import { backendList, icons } from "../../utils/constant";
+import { backendList, certainTime, icons } from "../../utils/constant";
 
 const statusMessageMap = {
   0: "빌드 전",
@@ -83,7 +83,7 @@ export default function ProjectItem({
           console.log(error);
         }
         clearTimeout(timerId);
-      }, 1000 * 60 * 2);
+      }, certainTime);
     } catch (error) {
       const { status } = error.response.data?.error;
       if (status === 4001) {

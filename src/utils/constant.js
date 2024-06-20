@@ -14,6 +14,8 @@ import { ReactComponent as SpringIcon } from "../assets/spring.svg";
 import { ReactComponent as SvelteIcon } from "../assets/svelte.svg";
 import { ReactComponent as VueIcon } from "../assets/vue.svg";
 
+export const certainTime = 1000 * 60 * 2;
+
 export const templateIcons = [
   { Icon: ReactIcon, subtitle: "web", title: "React", value: "react" },
   { Icon: VueIcon, subtitle: "web", title: "Vue", value: "vue" },
