@@ -23,21 +23,20 @@ export default function DeploymentHistory({ deploys, builds, project }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const isRollbackable = [2, 4, 5, 6].includes(project.status);
   const queryClient = useQueryClient();
-  const intervalRef = useRef(null);
 
   const handleDeployProject = async (buildId) => {
     try {
       setIsSubmitting(true);
       const response = await deployProject(buildId);
       console.log(response);
-
-      intervalRef.current = setInterval(async () => {
-        const response = await checkProjectDeployStatus(buildId);
-        console.log(response);
-        if (response.status === 4 || response.status === 6) {
-          clearInterval(intervalRef.current);
+      const timerId = setTimeout(async () => {
+        try {
+          await checkProjectDeployStatus(buildId);
+        } catch (error) {
+          console.log(error);
         }
-      }, 1000 * 5);
+        clearTimeout(timerId);
+      }, 1000 * 60 * 2);
     } catch (error) {
       const { status } = error.response.data?.error;
       if (status === 4001) {

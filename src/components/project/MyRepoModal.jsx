@@ -40,7 +40,8 @@ export default function MyRepoModal() {
   const [isUsableSubdomain, setIsUsableSubdomain] = useState(false);
   const setCreatingProjects = useSetAtom(creatingProjectsAtom);
   const setProjectTimeouts = useSetAtom(projectTimeoutsAtom);
-  const isBackend = backendList.includes(selectedFramework);
+  const isBackend =
+    backendList.includes(selectedFramework) || selectedFramework === "docker";
 
   const { isLoading, data: repos } = useQuery(
     ["/repos", user.login], // 쿼리 키에 user.login을 추가하여 유저마다 캐시 관리
@@ -170,7 +171,7 @@ export default function MyRepoModal() {
       // 2분 후에 배열에서 해당 프로젝트 아이디를 제거
       const timeoutId = setTimeout(() => {
         setCreatingProjects((prev) => prev.filter((id) => id !== projectId));
-      }, 1000 * 5);
+      }, 1000 * 60 * 2);
       setProjectTimeouts((prev) => [...prev, { [projectId]: timeoutId }]);
 
       closeModal();

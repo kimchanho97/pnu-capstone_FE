@@ -21,7 +21,6 @@ const statusMessageMap = {
   5: "빌드 실패",
   6: "배포 실패",
 };
-
 export default function ProjectItem({
   project,
   setSelectedProject,
@@ -38,7 +37,6 @@ export default function ProjectItem({
   const { openModal } = useModal();
   const isBuildable = [0, 2, 4, 5, 6].includes(project.status);
   const isDeployable = project.status === 2 || project.status === 6;
-  const intervalRef = useRef(null);
 
   const openGithubLink = () => {
     window.open(`https://github.com/${user.login}/${project.name}`, "_blank");
@@ -78,14 +76,14 @@ export default function ProjectItem({
       setIsSubmitting(true);
       const response = await deployProject(project.currentBuildId);
       console.log(response);
-
-      intervalRef.current = setInterval(async () => {
-        const response = await checkProjectDeployStatus(project.currentBuildId);
-        console.log(response);
-        if (response.status === 4 || response.status === 6) {
-          clearInterval(intervalRef.current);
+      const timerId = setTimeout(async () => {
+        try {
+          await checkProjectDeployStatus(project.currentBuildId);
+        } catch (error) {
+          console.log(error);
         }
-      }, 1000 * 5);
+        clearTimeout(timerId);
+      }, 1000 * 60 * 2);
     } catch (error) {
       const { status } = error.response.data?.error;
       if (status === 4001) {
