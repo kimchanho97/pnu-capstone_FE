@@ -10,7 +10,11 @@ import MainMenu from "./MainMenu";
 import ProjectDetail from "./ProjectDetail";
 import ProjectItem from "./ProjectItem";
 
-export default function MainSection({ selectedProject, setSelectedProject }) {
+export default function MainSection({
+  selectedProject,
+  setSelectedProject,
+  selectedFramework,
+}) {
   const { openModal } = useModal();
   const projects = useAtomValue(projectAtom);
   const creatingProjects = useAtomValue(creatingProjectsAtom);
@@ -65,32 +69,40 @@ export default function MainSection({ selectedProject, setSelectedProject }) {
               <ProjectDetail project={selectedProject} />
             ) : (
               <>
-                {projects.map((project) => (
-                  <div key={project.id}>
-                    {creatingProjects.includes(project.id) && (
-                      <div className=" relative">
-                        <div className=" h-[200px] w-[320px] rounded-xl shadow absolute z-10 opacity-75 bg-black text-zinc-50">
-                          <div className=" flex flex-col text-sm p-3 items-center">
-                            <span>프로젝트 인증서 생성 중입니다.</span>
-                            <span>
-                              인증서 생성에는 약 2분 정도 소요될 수 있습니다.
-                            </span>
-                            <div className=" pt-8">
-                              <CircularProgress color="inherit" />
+                {projects
+                  .filter(
+                    (project) =>
+                      !selectedFramework ||
+                      project.framework === selectedFramework,
+                  )
+                  .map((project) => (
+                    <div key={project.id}>
+                      {creatingProjects.includes(project.id) && (
+                        <div className=" relative">
+                          <div className=" h-[200px] w-[320px] rounded-xl shadow absolute z-10 opacity-75 bg-black text-zinc-50">
+                            <div className=" flex flex-col text-sm p-3 items-center">
+                              <span>프로젝트 인증서 생성 중입니다.</span>
+                              <span>
+                                인증서 생성에는 약 2분 정도 소요될 수 있습니다.
+                              </span>
+                              <div className=" pt-8">
+                                <CircularProgress color="inherit" />
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    )}
-                    <ProjectItem
-                      project={project}
-                      setSelectedProject={setSelectedProject}
-                      className={
-                        "border rounded-xl shadow p-5 h-[200px] w-[320px]"
+                      )}
+                      {
+                        <ProjectItem
+                          project={project}
+                          setSelectedProject={setSelectedProject}
+                          className={
+                            "border rounded-xl shadow p-5 h-[200px] w-[320px]"
+                          }
+                        />
                       }
-                    />
-                  </div>
-                ))}
+                    </div>
+                  ))}
                 <button
                   className=" w-[320px] h-[200px] hover:border border-dotted rounded-xl border-blue-300 group"
                   onClick={openSelectRepoModal}

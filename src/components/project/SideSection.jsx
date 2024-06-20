@@ -8,11 +8,15 @@ import { addFavorite, removeFavorite } from "../../apis/project";
 import { projectAtom, userAtom } from "../../store";
 import useModal from "../../hooks/useModal";
 
-export default function SideSection({ setSelectedProject, favorites }) {
+export default function SideSection({
+  setSelectedProject,
+  favorites,
+  selectedFramework,
+  setSelectedFramework,
+}) {
   const user = useAtomValue(userAtom);
   const projects = useAtomValue(projectAtom);
   const frameworks = [...new Set(projects.map((project) => project.framework))];
-  const [selectedFramework, setSelectedFramework] = useState("");
   const [isFrameworkListOpen, setIsFrameworkListOpen] = useState(false);
   const { mutate: addFavoriteMutate } = useMutation(addFavorite);
   const { mutate: removeFavoriteMutate } = useMutation(removeFavorite);

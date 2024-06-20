@@ -11,6 +11,7 @@ import { projectAtom, projectTimeoutsAtom, userAtom } from "../store";
 export default function ProjectPage() {
   const user = useAtomValue(userAtom);
   const [projects, setProjects] = useAtom(projectAtom);
+  const [selectedFramework, setSelectedFramework] = useState("");
   const [selectedProject, setSelectedProject] = useState(false);
   const [projectTimeouts, setProjectTimeouts] = useAtom(projectTimeoutsAtom);
   const location = useLocation();
@@ -39,6 +40,7 @@ export default function ProjectPage() {
   useEffect(() => {
     if (data) {
       setProjects(data);
+      setSelectedFramework("");
     }
   }, [data, setProjects]);
 
@@ -127,10 +129,13 @@ export default function ProjectPage() {
       <SideSection
         setSelectedProject={setSelectedProject}
         favorites={favorites}
+        selectedFramework={selectedFramework}
+        setSelectedFramework={setSelectedFramework}
       />
       <MainSection
         selectedProject={selectedProject}
         setSelectedProject={setSelectedProject}
+        selectedFramework={selectedFramework}
       />
     </div>
   );
